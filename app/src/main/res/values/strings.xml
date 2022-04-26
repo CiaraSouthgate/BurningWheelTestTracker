@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Burning Wheel Test Tracker</string>
+    <string name="artha_spent">Artha Spent</string>
+    <string name="artha_list">Fate: %1$d | Persona: %2$d | Deeds: %3$d</string>
+    <plurals name="num_skills">
+        <item quantity="one">%d skill</item>
+        <item quantity="other">%d skills</item>
+    </plurals>
+</resources>
