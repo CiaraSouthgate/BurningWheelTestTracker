@@ -41,17 +41,16 @@ class Skill(
     var aristeiaUsed: Boolean = false
 ) {
     init {
-        if (exponent < MIN_EXPONENT || exponent > MAX_EXPONENT) {
-            throw IllegalArgumentException("Exponent must be between 1 and 9")
-        }
-
-        if (routineTests < 0 || difficultTests < 0 || challengingTests < 0) {
-            throw IllegalArgumentException("Tests cannot be less than 0")
-        }
-
-        if (fateSpent < 0 || personaSpent < 0 || deedsSpent < 0) {
-            throw IllegalArgumentException("Artha spent cannot be less than 0")
-        }
+        require(name.isNotBlank())
+        require(characterName.isNotBlank())
+        require(exponent >= MIN_EXPONENT)
+        require(exponent <= MAX_EXPONENT)
+        require(routineTests >= 0)
+        require(difficultTests >= 0)
+        require(challengingTests >= 0)
+        require(fateSpent >= 0)
+        require(personaSpent >= 0)
+        require(deedsSpent >= 0)
     }
 
     private val requiredRoutineTests: Int

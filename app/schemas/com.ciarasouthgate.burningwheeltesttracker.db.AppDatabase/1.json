@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "00a4cbae4521e6247d4172f5bed88082",
+    "identityHash": "0232131d246141b8ec606b0e9a9bd8dd",
     "entities": [
       {
         "tableName": "BaseCharacter",
@@ -26,7 +26,7 @@
       },
       {
         "tableName": "Skill",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `characterName` TEXT NOT NULL, `type` INTEGER NOT NULL, `exponent` INTEGER NOT NULL, `shade` INTEGER NOT NULL, `tests_routine` INTEGER NOT NULL, `tests_difficult` INTEGER NOT NULL, `tests_challenging` INTEGER NOT NULL, `spent_fate` INTEGER NOT NULL, `spent_persona` INTEGER NOT NULL, `spent_deeds` INTEGER NOT NULL, PRIMARY KEY(`name`, `characterName`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `characterName` TEXT NOT NULL, `exponent` INTEGER NOT NULL, `type` INTEGER NOT NULL, `shade` INTEGER NOT NULL, `tests_routine` INTEGER NOT NULL, `tests_difficult` INTEGER NOT NULL, `tests_challenging` INTEGER NOT NULL, `spent_fate` INTEGER NOT NULL, `spent_persona` INTEGER NOT NULL, `spent_deeds` INTEGER NOT NULL, `aristeia_available` INTEGER NOT NULL, `aristeia_spent` INTEGER NOT NULL, PRIMARY KEY(`name`, `characterName`))",
         "fields": [
           {
             "fieldPath": "name",
@@ -41,14 +41,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "type",
-            "columnName": "type",
+            "fieldPath": "exponent",
+            "columnName": "exponent",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "exponent",
-            "columnName": "exponent",
+            "fieldPath": "type",
+            "columnName": "type",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -89,8 +89,20 @@
             "notNull": true
           },
           {
-            "fieldPath": "deedsSpend",
+            "fieldPath": "deedsSpent",
             "columnName": "spent_deeds",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "aristeiaAvailable",
+            "columnName": "aristeia_available",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "aristeiaUsed",
+            "columnName": "aristeia_spent",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -109,7 +121,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '00a4cbae4521e6247d4172f5bed88082')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0232131d246141b8ec606b0e9a9bd8dd')"
     ]
   }
 }

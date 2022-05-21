@@ -7,6 +7,7 @@ import com.ciarasouthgate.burningwheeltesttracker.common.Type
 import com.ciarasouthgate.burningwheeltesttracker.util.createRandomTestSkill
 import com.ciarasouthgate.burningwheeltesttracker.util.createTestSkill
 import junit.framework.Assert.*
+import org.junit.Assert.assertThrows
 import org.junit.Test
 
 internal class SkillTest {
@@ -65,8 +66,6 @@ internal class SkillTest {
                 )
             }
         }
-
-
     }
 
     @Test
@@ -86,14 +85,82 @@ internal class SkillTest {
         for (exp in 1..MAX_EXPONENT) {
             val stat = createTestSkill(exponent = exp, type = Type.STAT)
             TestType.values().forEachIndexed { index, testType ->
-                assertEquals(requiredStatTests[exp]!![index], stat.getRequiredTestsForType(testType))
+                assertEquals(
+                    requiredStatTests[exp]!![index],
+                    stat.getRequiredTestsForType(testType)
+                )
             }
         }
+    }
 
+    @Test
+    fun test_useAristeia_available() {
+        val skill = createTestSkill().apply { aristeiaAvailable = true }
+
+        skill.useAristeia()
+        assertTrue(skill.aristeiaUsed)
+        assertFalse(skill.aristeiaAvailable)
+    }
+
+    @Test
+    fun test_useAristeia_unavailable() {
+        val skill = createTestSkill().apply { aristeiaAvailable = false }
+
+        assertThrows(Exception::class.java, skill::useAristeia)
     }
 
     @Test
     fun test_addTestAndCheckUpgrade() {
 
+    }
+
+    @Test
+    fun test_createSkill_invalidValues() {
+        assertThrows("Empty skill name accepted", IllegalArgumentException::class.java) {
+            createTestSkill(skillName = "")
+        }
+        assertThrows("Blank skill name accepted", IllegalArgumentException::class.java) {
+            createTestSkill(skillName = " ")
+        }
+        assertThrows("Empty character name accepted", IllegalArgumentException::class.java) {
+            createTestSkill(characterName = "")
+        }
+        assertThrows("Blank character name accepted", IllegalArgumentException::class.java) {
+            createTestSkill(characterName = " ")
+        }
+        assertThrows("Negative exponent accepted", IllegalArgumentException::class.java) {
+            createTestSkill(exponent = -1)
+        }
+        assertThrows("Too high exponent accepted", IllegalArgumentException::class.java) {
+            createTestSkill(exponent = 10)
+        }
+
+        assertThrows("Zero exponent accepted", IllegalArgumentException::class.java) {
+            createTestSkill(exponent = 0)
+        }
+
+        assertThrows("Negative routine tests accepted", IllegalArgumentException::class.java) {
+            createTestSkill(routine = -1)
+        }
+
+        assertThrows("Negative difficult tests accepted", IllegalArgumentException::class.java) {
+            createTestSkill(difficult = -1)
+        }
+
+        assertThrows("Negative challenging tests accepted", IllegalArgumentException::class.java) {
+            createTestSkill(challenging = -1)
+        }
+
+        assertThrows("Negative fate accepted", IllegalArgumentException::class.java) {
+            createTestSkill(fateSpent = -1)
+        }
+
+        assertThrows("Negative persona accepted", IllegalArgumentException::class.java) {
+            createTestSkill(personaSpent = -1)
+        }
+
+        assertThrows("Negative deeds accepted", IllegalArgumentException::class.java) {
+            createTestSkill(deedsSpent = -1)
+        }
     }
 }
