@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -16,9 +16,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Black50Alpha
-import com.ciarasouthgate.burningwheeltesttracker.ui.util.createTestCharacters
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
+import com.ciarasouthgate.burningwheeltesttracker.util.createTestCharacters
 
 
 @Composable
@@ -51,7 +51,7 @@ fun CharacterListItem(
     ) {
         Text(
             text = character.name,
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.subtitle1,
         )
         Text(
             text = resources.getQuantityString(
@@ -67,7 +67,7 @@ fun CharacterListItem(
 @Preview(widthDp = 340)
 @Composable
 fun CharacterListItemPreview() {
-    AppTheme {
+    TestTrackerTheme {
         CharacterList(createTestCharacters(3), {})
     }
 }

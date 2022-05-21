@@ -21,3 +21,7 @@ enum class ArthaType(val letter: String) {
     PERSONA("P"),
     DEEDS("D")
 }
+
+enum class RollType {
+    STANDARD, VERSUS, GRADUATED
+}

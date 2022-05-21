@@ -1,11 +1,11 @@
-package com.ciarasouthgate.burningwheeltesttracker.ui.util
+package com.ciarasouthgate.burningwheeltesttracker.util
 
+import com.ciarasouthgate.burningwheeltesttracker.common.MAX_EXPONENT
+import com.ciarasouthgate.burningwheeltesttracker.common.MAX_TESTS_NEEDED
 import com.ciarasouthgate.burningwheeltesttracker.common.Shade
 import com.ciarasouthgate.burningwheeltesttracker.common.Type
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
-import com.ciarasouthgate.burningwheeltesttracker.util.MAX_EXPONENT
-import com.ciarasouthgate.burningwheeltesttracker.util.MAX_TESTS_NEEDED
 import kotlin.random.Random
 
 fun createTestCharacters(num: Int): List<Character> {
@@ -21,16 +21,9 @@ fun createTestCharacters(num: Int): List<Character> {
 
 fun createTestSkillList(num: Int, characterName: String): List<Skill> {
     return (1..num).map { j ->
-        createTestSkill(
+        createRandomTestSkill(
             "Test Skill $j",
-            characterName,
-            Random.nextInt(1, MAX_EXPONENT),
-            routine = Random.nextInt(0, MAX_TESTS_NEEDED),
-            difficult = Random.nextInt(0, MAX_TESTS_NEEDED),
-            challenging = Random.nextInt(0, MAX_TESTS_NEEDED),
-            fateSpent = Random.nextInt(0, MAX_TESTS_NEEDED),
-            personaSpent = Random.nextInt(0, MAX_TESTS_NEEDED),
-            deedsSpent = Random.nextInt(0, MAX_TESTS_NEEDED)
+            characterName
         )
     }
 }
@@ -44,6 +37,24 @@ fun createTestStatList(): List<Skill> {
         )
     }
 }
+
+fun createRandomTestSkill(
+    skillName: String = "Test Skill",
+    characterName: String = "Test Character",
+    type: Type = Type.SKILL
+) = Skill(
+    skillName,
+    characterName,
+    Random.nextInt(1, MAX_EXPONENT),
+    type = type,
+    routineTests = Random.nextInt(0, MAX_TESTS_NEEDED),
+    difficultTests = Random.nextInt(0, MAX_TESTS_NEEDED),
+    challengingTests = Random.nextInt(0, MAX_TESTS_NEEDED),
+    fateSpent = Random.nextInt(0, MAX_TESTS_NEEDED),
+    personaSpent = Random.nextInt(0, MAX_TESTS_NEEDED),
+    deedsSpent = Random.nextInt(0, MAX_TESTS_NEEDED)
+)
+
 
 fun createTestSkill(
     skillName: String = "Test Skill",
@@ -60,8 +71,8 @@ fun createTestSkill(
 ) = Skill(
     skillName,
     characterName,
-    type,
     exponent,
+    type,
     shade,
     routine,
     difficult,
