@@ -12,34 +12,69 @@ import kotlin.math.ceil
 class Skill(
     val name: String,
     val characterName: String,
-    var exponent: Int,
+    exponent: Int,
     val type: Type = Type.SKILL,
     var shade: Shade = Shade.BLACK,
-
-    @ColumnInfo(name = "tests_routine")
-    var routineTests: Int = 0,
-
-    @ColumnInfo(name = "tests_difficult")
-    var difficultTests: Int = 0,
-
-    @ColumnInfo(name = "tests_challenging")
-    var challengingTests: Int = 0,
-
-    @ColumnInfo(name = "spent_fate")
-    var fateSpent: Int = 0,
-
-    @ColumnInfo(name = "spent_persona")
-    var personaSpent: Int = 0,
-
-    @ColumnInfo(name = "spent_deeds")
-    var deedsSpent: Int = 0,
-
+    routineTests: Int = 0,
+    difficultTests: Int = 0,
+    challengingTests: Int = 0,
+    fateSpent: Int = 0,
+    personaSpent: Int = 0,
+    deedsSpent: Int = 0,
     @ColumnInfo(name = "aristeia_available")
     var aristeiaAvailable: Boolean = false,
-
     @ColumnInfo(name = "aristeia_spent")
     var aristeiaUsed: Boolean = false
 ) {
+    var exponent = exponent
+        set(value) {
+            require(value >= MIN_EXPONENT)
+            require(value <= MAX_EXPONENT)
+            field = value
+        }
+
+    @ColumnInfo(name = "tests_routine")
+    var routineTests: Int = routineTests
+        set(value) {
+            require(value >= 0)
+            field = value
+        }
+
+    @ColumnInfo(name = "tests_difficult")
+    var difficultTests: Int = difficultTests
+        set(value) {
+            require(value >= 0)
+            field = value
+        }
+
+    @ColumnInfo(name = "tests_challenging")
+    var challengingTests: Int = challengingTests
+        set(value) {
+            require(value >= 0)
+            field = value
+        }
+
+    @ColumnInfo(name = "spent_fate")
+    var fateSpent: Int = fateSpent
+        set(value) {
+            require(value >= 0)
+            field = value
+        }
+
+    @ColumnInfo(name = "spent_persona")
+    var personaSpent: Int = personaSpent
+        set(value) {
+            require(value >= 0)
+            field = value
+        }
+
+    @ColumnInfo(name = "spent_deeds")
+    var deedsSpent: Int = deedsSpent
+        set(value) {
+            require(value >= 0)
+            field = value
+        }
+
     init {
         require(name.isNotBlank())
         require(characterName.isNotBlank())
@@ -62,7 +97,7 @@ class Skill(
     private val requiredChallengingTests: Int
         get() = getRequiredTests(TestType.CHALLENGING)
 
-    val requiresDifficultOrChallenging: Boolean
+    val optionalTestTypes: Boolean
         get() = this.type != Type.STAT && exponent < 5
 
     fun getCompletedTestsForType(type: TestType): Int = when (type) {
@@ -102,14 +137,16 @@ class Skill(
     }
 
     private fun checkExponentAdvancement(): Boolean {
+        if (exponent == MAX_EXPONENT) return false
+
         val requiredRoutine = routineTests >= requiredRoutineTests
-        val requiredDifficult = routineTests >= requiredDifficultTests
-        val requiredChallenging = routineTests >= requiredChallengingTests
+        val requiredDifficult = difficultTests >= requiredDifficultTests
+        val requiredChallenging = challengingTests >= requiredChallengingTests
 
         if (
             (requiredRoutine && requiredDifficult && requiredChallenging) ||
-            (requiredRoutine && requiredDifficult && requiresDifficultOrChallenging) ||
-            (requiredRoutine && requiredChallenging && requiresDifficultOrChallenging)
+            (requiredRoutine && requiredDifficult && optionalTestTypes) ||
+            (requiredRoutine && requiredChallenging && optionalTestTypes)
         ) {
             exponent++
             return true
@@ -119,12 +156,14 @@ class Skill(
 
     private fun checkArthaAdvancement(): Boolean {
         if (!aristeiaUsed && deedsSpent >= DEEDS_ARISTEIA
-            && personaSpent >= PERSONA_ARISTEIA && fateSpent >= FATE_ARISTEIA) {
+            && personaSpent >= PERSONA_ARISTEIA && fateSpent >= FATE_ARISTEIA
+        ) {
             aristeiaAvailable = true
         }
 
         if (deedsSpent >= DEEDS_EPIPHANY && personaSpent >= PERSONA_EPIPHANY
-            && fateSpent >= FATE_EPIPHANY) {
+            && fateSpent >= FATE_EPIPHANY
+        ) {
             shadeShift()
 
             return true
@@ -144,9 +183,6 @@ class Skill(
     }
 
     private fun getRequiredTests(testType: TestType): Int {
-        if (exponent < MIN_EXPONENT || exponent > MAX_EXPONENT) {
-            throw IllegalArgumentException("Invalid exponent")
-        }
         return when (testType) {
             TestType.ROUTINE -> if (exponent < 5 && this.type == Type.SKILL) exponent else 0
             TestType.DIFFICULT -> ceil(exponent / 2.0).toInt()

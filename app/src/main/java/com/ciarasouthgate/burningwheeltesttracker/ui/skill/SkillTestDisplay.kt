@@ -59,7 +59,7 @@ fun SkillTestRow(type: TestType, skill: Skill) {
                 Icons.Default.Circle
             } else if (i <= numComplete) {
                 Icons.Default.TaskAlt
-            } else if (type != TestType.ROUTINE && skill.requiresDifficultOrChallenging) {
+            } else if (type != TestType.ROUTINE && skill.optionalTestTypes) {
                 null
             } else {
                 Icons.Default.RadioButtonUnchecked

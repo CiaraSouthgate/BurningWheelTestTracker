@@ -3,7 +3,7 @@ package com.ciarasouthgate.burningwheeltesttracker.common
 const val MAX_PERSONA = 3
 const val MAX_TESTS_NEEDED = 4
 const val MIN_EXPONENT = 1
-const val MAX_EXPONENT = 9
+const val MAX_EXPONENT = 10
 
 const val DEEDS_ARISTEIA = 1
 const val PERSONA_ARISTEIA = 3
