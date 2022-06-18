@@ -123,6 +123,10 @@ class Skill(
     }
 
     fun spendArthaAndCheckAdvancement(fate: Int, persona: Int, deeds: Boolean): Boolean {
+        if (persona > MAX_PERSONA) throw IllegalArgumentException(
+            "Cannot spend more than $MAX_PERSONA persona on one roll"
+        )
+
         fateSpent += fate
         personaSpent += persona
         if (deeds) deedsSpent++
@@ -155,18 +159,24 @@ class Skill(
     }
 
     private fun checkArthaAdvancement(): Boolean {
-        if (!aristeiaUsed && deedsSpent >= DEEDS_ARISTEIA
-            && personaSpent >= PERSONA_ARISTEIA && fateSpent >= FATE_ARISTEIA
+        if (!aristeiaUsed
+            && deedsSpent >= DEEDS_ARISTEIA
+            && personaSpent >= PERSONA_ARISTEIA
+            && fateSpent >= FATE_ARISTEIA
         ) {
             aristeiaAvailable = true
         }
 
-        if (deedsSpent >= DEEDS_EPIPHANY && personaSpent >= PERSONA_EPIPHANY
+        if (deedsSpent >= DEEDS_EPIPHANY
+            && personaSpent >= PERSONA_EPIPHANY
             && fateSpent >= FATE_EPIPHANY
         ) {
-            shadeShift()
-
-            return true
+            return if (shade == Shade.WHITE) {
+                false
+            } else {
+                shadeShift()
+                true
+            }
         }
         return false
     }
@@ -177,9 +187,9 @@ class Skill(
         aristeiaAvailable = false
         aristeiaUsed = false
 
-        fateSpent = 0
-        personaSpent = 0
-        deedsSpent = 0
+        fateSpent -= FATE_EPIPHANY
+        personaSpent -= PERSONA_EPIPHANY
+        deedsSpent -= DEEDS_EPIPHANY
     }
 
     private fun getRequiredTests(testType: TestType): Int {

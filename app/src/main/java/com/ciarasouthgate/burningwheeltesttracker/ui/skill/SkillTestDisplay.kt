@@ -47,7 +47,7 @@ fun SkillTestRow(type: TestType, skill: Skill) {
     val numNeeded = skill.getRequiredTestsForType(type)
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
-            type.letter,
+            type.prettyName[0].toString(),
             style = MaterialTheme.typography.caption,
             modifier = Modifier
                 .width(iconSize)

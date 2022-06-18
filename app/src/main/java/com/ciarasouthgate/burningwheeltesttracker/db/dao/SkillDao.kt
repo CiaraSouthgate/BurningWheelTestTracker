@@ -17,4 +17,11 @@ interface SkillDao {
     @Transaction
     @Query("SELECT * FROM Skill")
     fun getAll(): List<Skill>
+
+    @Transaction
+    @Query("SELECT * FROM Skill WHERE characterName = :characterName")
+    fun getSkillsForCharacter(characterName: String): List<Skill>
+
+    @Query("SELECT * FROM Skill WHERE characterName = :characterName AND name = :skillName")
+    fun getSkill(characterName: String, skillName: String): Skill
 }

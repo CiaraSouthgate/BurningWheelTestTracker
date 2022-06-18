@@ -19,28 +19,26 @@ import androidx.compose.ui.unit.sp
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.common.MAX_PERSONA
 import com.ciarasouthgate.burningwheeltesttracker.common.RollType
-import com.ciarasouthgate.burningwheeltesttracker.roll.RollDetailViewModel
+import com.ciarasouthgate.burningwheeltesttracker.roll.RollState
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Bitter
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.createTestSkill
 
 @Composable
 fun RollDetailContent(
-    viewModel: RollDetailViewModel,
+    rollState: RollState,
+    rollType: RollType,
     modifier: Modifier = Modifier
 ) {
     var showDiceModifierDialog by remember { mutableStateOf(false) }
     var showObstacleModifierDialog by remember { mutableStateOf(false) }
-
-    val rollState = viewModel.rollState
-    val rollType = viewModel.rollType
 
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            stringResource(R.string.testing_header, viewModel.skill.name),
+            stringResource(R.string.testing_header, rollState.skillName),
             style = MaterialTheme.typography.h4
         )
         Row(
@@ -182,6 +180,9 @@ private fun ArthaDisplay(
 private fun RollDetailPreview() {
     val skill = createTestSkill(skillName = "Stealthy")
     TestTrackerTheme {
-        RollDetailContent(RollDetailViewModel(skill))
+        RollDetailContent(
+            RollState(skill),
+            RollType.STANDARD
+        )
     }
 }

@@ -6,34 +6,38 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ciarasouthgate.burningwheeltesttracker.common.RollType
-import com.ciarasouthgate.burningwheeltesttracker.roll.RollDetailViewModel
+import com.ciarasouthgate.burningwheeltesttracker.roll.RollState
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.createTestSkill
 
 @Composable
-fun RollDetail(viewModel: RollDetailViewModel) {
+fun RollDetail(rollState: RollState) {
+    var selectedTabIndex by remember { mutableStateOf(0) }
+    val rollType by derivedStateOf { RollType.values()[selectedTabIndex] }
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TabRow(selectedTabIndex = viewModel.selectedTabIndex) {
+        TabRow(selectedTabIndex = selectedTabIndex) {
             RollType.values().forEachIndexed { index, rollType ->
                 Tab(
                     text = { Text(rollType.name, fontSize = 12.sp) },
-                    selected = viewModel.selectedTabIndex == index,
-                    onClick = { viewModel.onSelectedTabChanged(index) }
+                    selected = selectedTabIndex == index,
+                    onClick = { selectedTabIndex = index }
                 )
             }
         }
         RollDetailContent(
-            viewModel,
+            rollState,
+            rollType,
             Modifier.padding(top = 10.dp)
         )
     }
@@ -42,8 +46,8 @@ fun RollDetail(viewModel: RollDetailViewModel) {
 @Preview(widthDp = 340)
 @Composable
 fun RollScreenPreview() {
-    val viewModel = RollDetailViewModel(createTestSkill())
+    val skill = createTestSkill()
     TestTrackerTheme {
-        RollDetail(viewModel)
+        RollDetail(RollState(skill))
     }
 }

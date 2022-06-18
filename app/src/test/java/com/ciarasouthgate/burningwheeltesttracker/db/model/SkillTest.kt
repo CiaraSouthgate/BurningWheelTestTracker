@@ -1,14 +1,12 @@
 package com.ciarasouthgate.burningwheeltesttracker.db.model
 
-import com.ciarasouthgate.burningwheeltesttracker.common.MAX_EXPONENT
-import com.ciarasouthgate.burningwheeltesttracker.common.MIN_EXPONENT
-import com.ciarasouthgate.burningwheeltesttracker.common.TestType
+import com.ciarasouthgate.burningwheeltesttracker.common.*
 import com.ciarasouthgate.burningwheeltesttracker.common.TestType.*
-import com.ciarasouthgate.burningwheeltesttracker.common.Type
 import com.ciarasouthgate.burningwheeltesttracker.util.createRandomTestSkill
 import com.ciarasouthgate.burningwheeltesttracker.util.createTestSkill
 import org.junit.Assert.*
 import org.junit.Test
+import kotlin.random.Random
 
 internal class SkillTest {
     private val requiredStatTests = mapOf(
@@ -215,6 +213,74 @@ internal class SkillTest {
     }
 
     @Test
+    fun test_spendArthaAndCheckAdvancement_illegalPersona() {
+        val skill = createTestSkill()
+        assertThrows(IllegalArgumentException::class.java) {
+            skill.spendArthaAndCheckAdvancement(0, MAX_PERSONA + 1, false)
+        }
+    }
+
+    @Test
+    fun test_spendArthaAndCheckAdvancement_aristeia_used() {
+        val skill = createTestSkill(
+            deedsSpent = 2,
+            personaSpent = PERSONA_ARISTEIA - MAX_PERSONA
+        ).apply { aristeiaUsed = true }
+        skill.spendArthaAndCheckAdvancement(FATE_ARISTEIA, MAX_PERSONA, true)
+        assertFalse(skill.aristeiaAvailable)
+    }
+
+    @Test
+    fun test_spendArthaAndCheckAdvancement_aristeia_noDeeds() {
+        val skill = createTestSkill(
+            personaSpent = PERSONA_ARISTEIA - MAX_PERSONA
+        )
+        skill.spendArthaAndCheckAdvancement(FATE_ARISTEIA, MAX_PERSONA, false)
+        assertFalse(skill.aristeiaAvailable)
+    }
+
+    @Test
+    fun test_spendArthaAndCheckAdvancement_aristeia_noPersona() {
+        val skill = createTestSkill()
+        skill.spendArthaAndCheckAdvancement(FATE_ARISTEIA, 0, true)
+        assertFalse(skill.aristeiaAvailable)
+    }
+
+    @Test
+    fun test_spendArthaAndCheckAdvancement_aristeia_noFate() {
+        val skill = createTestSkill(
+            personaSpent = PERSONA_ARISTEIA
+        )
+        skill.spendArthaAndCheckAdvancement(0, 0, true)
+        assertFalse(skill.aristeiaAvailable)
+    }
+
+    @Test
+    fun test_spendArthaAndCheckAdvancement_aristeia_requirementsMet() {
+        val skill = createTestSkill(
+            deedsSpent = 2,
+            personaSpent = PERSONA_ARISTEIA - MAX_PERSONA
+        )
+        skill.spendArthaAndCheckAdvancement(FATE_ARISTEIA, MAX_PERSONA, true)
+        assertTrue(skill.aristeiaAvailable)
+    }
+
+    @Test
+    fun test_shadeShift_startBlack() {
+        testShadeShift(Shade.BLACK, true)
+    }
+
+    @Test
+    fun test_shadeShift_startGrey() {
+        testShadeShift(Shade.GREY, true)
+    }
+
+    @Test
+    fun test_shadeShift_startWhite() {
+        testShadeShift(Shade.WHITE, false)
+    }
+
+    @Test
     fun test_createSkill_invalidValues() {
         assertThrows("Empty skill name accepted", IllegalArgumentException::class.java) {
             createTestSkill(skillName = "")
@@ -368,6 +434,38 @@ internal class SkillTest {
             testBefore + 1,
             skill.getTests(testType)
         )
+    }
+
+    private fun testShadeShift(startShade: Shade, shouldShift: Boolean) {
+        val startFate = Random.nextInt(FATE_EPIPHANY - 1, FATE_EPIPHANY * 2)
+        val startPersona = Random.nextInt(PERSONA_EPIPHANY - 1, PERSONA_EPIPHANY * 2)
+        val startDeeds = Random.nextInt(DEEDS_EPIPHANY - 1, DEEDS_EPIPHANY * 2)
+
+        val skill = createTestSkill(
+            fateSpent = startFate,
+            personaSpent = startPersona,
+            deedsSpent = startDeeds,
+            shade = startShade
+        ).apply {
+            aristeiaUsed = true
+        }
+
+        if (shouldShift) {
+            assertTrue(skill.spendArthaAndCheckAdvancement(1, 1, true))
+            assertEquals(Shade.values()[startShade.ordinal + 1], skill.shade)
+            assertFalse(skill.aristeiaAvailable)
+            assertFalse(skill.aristeiaUsed)
+            assertEquals(startFate - (FATE_EPIPHANY - 1), skill.fateSpent)
+            assertEquals(startPersona - (PERSONA_EPIPHANY - 1), skill.personaSpent)
+            assertEquals(startDeeds - (DEEDS_EPIPHANY - 1), skill.deedsSpent)
+        } else {
+            assertFalse(skill.spendArthaAndCheckAdvancement(1, 1, true))
+            assertEquals(startShade, skill.shade)
+            assertTrue(skill.aristeiaUsed)
+            assertEquals(startFate + 1, skill.fateSpent)
+            assertEquals(startPersona + 1, skill.personaSpent)
+            assertEquals(startDeeds + 1, skill.deedsSpent)
+        }
     }
 
     private fun Skill.getTests(type: TestType) = when (type) {

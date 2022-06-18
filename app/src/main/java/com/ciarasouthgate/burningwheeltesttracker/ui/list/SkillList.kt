@@ -55,7 +55,7 @@ fun SkillListItem(
             modifier = Modifier.weight(1f)
         )
         Text(
-            skill.shade.letter,
+            skill.shade.prettyName[0].toString(),
             style = MaterialTheme.typography.h6,
             fontWeight = FontWeight.Bold
         )

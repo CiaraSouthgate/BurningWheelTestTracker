@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
-@Entity
+@Entity(tableName = "Character")
 data class BaseCharacter(
     @PrimaryKey
     val name: String

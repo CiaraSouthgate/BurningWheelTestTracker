@@ -16,6 +16,6 @@ interface CharacterDao {
     fun update(character: BaseCharacter)
 
     @Transaction
-    @Query("SELECT * FROM BaseCharacter")
+    @Query("SELECT * FROM Character")
     fun getAll(): List<Character>
 }
