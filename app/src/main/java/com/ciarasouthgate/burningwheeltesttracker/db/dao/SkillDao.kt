@@ -6,22 +6,22 @@ import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
 @Dao
 interface SkillDao {
     @Insert
-    fun insert(skill: Skill)
+    suspend fun insert(skill: Skill)
 
     @Delete
-    fun delete(skill: Skill)
+    suspend fun delete(skill: Skill)
 
     @Update
-    fun update(skill: Skill)
-
-    @Transaction
-    @Query("SELECT * FROM Skill")
-    fun getAll(): List<Skill>
+    suspend fun update(skill: Skill)
 
     @Transaction
     @Query("SELECT * FROM Skill WHERE characterName = :characterName")
-    fun getSkillsForCharacter(characterName: String): List<Skill>
+    suspend fun getSkillsForCharacter(characterName: String): List<Skill>
 
     @Query("SELECT * FROM Skill WHERE characterName = :characterName AND name = :skillName")
-    fun getSkill(characterName: String, skillName: String): Skill
+    suspend fun getSkill(characterName: String, skillName: String): Skill
+
+    @Transaction
+    @Query("SELECT * FROM Skill WHERE characterName = :characterName AND name LIKE '%' || :query || '%'")
+    suspend fun search(characterName: String, query: String): List<Skill>
 }

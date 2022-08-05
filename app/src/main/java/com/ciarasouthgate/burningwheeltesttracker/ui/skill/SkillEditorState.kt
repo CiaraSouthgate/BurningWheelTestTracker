@@ -6,7 +6,7 @@ import com.ciarasouthgate.burningwheeltesttracker.common.Shade
 import com.ciarasouthgate.burningwheeltesttracker.common.TestType
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 
-class AddSkillState(
+class SkillEditorState(
     val character: Character,
     initialName: String = "",
     initialShade: Shade = Shade.BLACK,
@@ -36,7 +36,7 @@ class AddSkillState(
 }
 
 @Composable
-fun rememberAddSkillState(
+fun rememberSkillEditorState(
     character: Character,
     name: String = "",
     shade: Shade = Shade.BLACK,
@@ -59,7 +59,7 @@ fun rememberAddSkillState(
     personaSpent,
     deedsSpent
 ) {
-    AddSkillState(
+    SkillEditorState(
         character,
         name,
         shade,

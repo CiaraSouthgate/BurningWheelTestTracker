@@ -1,23 +1,18 @@
 package com.ciarasouthgate.burningwheeltesttracker.hilt
 
 import android.content.Context
-import androidx.room.Room
-import com.ciarasouthgate.burningwheeltesttracker.db.AppDatabase
+import com.ciarasouthgate.burningwheeltesttracker.db.getDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(SingletonComponent::class)
 object DatabaseModule {
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context) = Room.databaseBuilder(
-        context,
-        AppDatabase::class.java,
-        "burning-wheel-test-tracker-db"
-    ).build()
+    fun provideDatabase(@ApplicationContext context: Context) = getDatabase(context)
 }

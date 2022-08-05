@@ -43,7 +43,7 @@ class RollState(
 
     val skillName = skill.name
 
-    fun save() {
+    fun updateSkill(): Skill {
         val diceValue = diceRolled - persona.value
         val testType = getTestType(diceValue, obstacle)
         skill.addTestAndCheckUpgrade(testType)
@@ -52,6 +52,7 @@ class RollState(
             persona.value,
             deeds.value
         )
+        return skill
     }
 
     private fun getTestType(dice: Int, obstacle: Int): TestType {

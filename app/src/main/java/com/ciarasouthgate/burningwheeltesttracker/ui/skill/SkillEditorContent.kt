@@ -21,8 +21,8 @@ import com.ciarasouthgate.burningwheeltesttracker.ui.common.LabelPosition
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
 
 @Composable
-fun AddSkillFormContent(
-    state: AddSkillState,
+fun SkillEditorContent(
+    state: SkillEditorState,
     skillNameError: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -208,10 +208,10 @@ private fun AddSkillSection(
 
 @Preview
 @Composable
-fun AddSkillFormPreview() {
+fun SkillEditorContentPreview() {
     TestTrackerTheme {
         val character = Character("Test Character", emptyList())
-        val state = rememberAddSkillState(character)
-        AddSkillFormContent(state, false)
+        val state = rememberSkillEditorState(character)
+        SkillEditorContent(state, false)
     }
 }

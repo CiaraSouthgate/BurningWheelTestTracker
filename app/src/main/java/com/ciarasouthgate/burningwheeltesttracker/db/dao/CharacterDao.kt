@@ -7,15 +7,15 @@ import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 @Dao
 interface CharacterDao {
     @Insert
-    fun insert(character: BaseCharacter)
+    suspend fun insert(character: BaseCharacter)
 
     @Delete
-    fun delete(character: BaseCharacter)
+    suspend fun delete(character: BaseCharacter)
 
     @Update
-    fun update(character: BaseCharacter)
+    suspend fun update(character: BaseCharacter)
 
     @Transaction
-    @Query("SELECT * FROM Character")
-    fun getAll(): List<Character>
+    @Query("SELECT * FROM Character WHERE name LIKE '%' || :query || '%'")
+    suspend fun search(query: String): List<Character>
 }
