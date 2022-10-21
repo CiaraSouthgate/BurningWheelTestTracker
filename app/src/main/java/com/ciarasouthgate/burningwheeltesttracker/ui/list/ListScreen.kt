@@ -8,6 +8,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -22,6 +24,7 @@ fun <ItemType> ListScreen(
     navigationIcon: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
+    val items by viewModel.items.collectAsState(emptyList())
     Scaffold(
         topBar = {
             AppBarWithSearch(
@@ -37,7 +40,7 @@ fun <ItemType> ListScreen(
             }
         }
     ) { paddingValues ->
-        if (viewModel.items.isEmpty()) {
+        if (items.isEmpty()) {
             Text(
                 emptyText,
                 modifier = Modifier

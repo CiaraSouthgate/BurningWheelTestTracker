@@ -26,8 +26,8 @@ private const val SKILLS = "skills"
 private const val ROLL = "roll"
 private const val SKILL_EDITOR = "skillEditor"
 
-private const val CHARACTER_NAME = "characterName"
-private const val SKILL_NAME = "skillName"
+private const val CHARACTER_ID = "characterId"
+private const val SKILL_ID = "skillId"
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -46,68 +46,58 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
             CharacterListScreen(
                 onCharacterAdded = navController::navigateToSkillList,
                 onCharacterClicked = { character ->
-                    navController.navigateToSkillList(character.name)
+                    navController.navigateToSkillList(character.id)
                 }
             )
         }
         composable(
-            "${SKILLS}/{$CHARACTER_NAME}",
+            "${SKILLS}/{$CHARACTER_ID}",
             arguments = listOf(
-                navArgument(CHARACTER_NAME) {
-                    type = NavType.StringType
+                navArgument(CHARACTER_ID) {
+                    type = NavType.LongType
                 }
             )
         ) { entry ->
-            val characterName = entry.arguments?.getString(CHARACTER_NAME)
-            if (characterName.isNullOrEmpty()) {
-                throw IllegalArgumentException("Must provide character name for skills list")
-            }
+            val characterId = entry.arguments?.getLong(CHARACTER_ID)
+                ?: throw IllegalArgumentException("Must provide character ID for skills list")
 
             SkillListScreen(
-                characterName = characterName,
+                characterId = characterId,
                 onAddClicked = {
                     navController.navigate(
-                        "${SKILL_EDITOR}/${characterName}"
+                        "${SKILL_EDITOR}/${characterId}"
                     )
                 },
                 onSkillClicked = {
                     navController.navigate(
-                        "${ROLL}/${it.characterName}/${it.name}"
+                        "${ROLL}/${it.id}"
                     )
                 },
                 navigationIcon = { BackButton(navController) }
             )
         }
         composable(
-            "${ROLL}/{$CHARACTER_NAME}/{$SKILL_NAME}",
+            "${ROLL}/{$SKILL_ID}",
             arguments = listOf(
-                navArgument(CHARACTER_NAME) {
-                    type = NavType.StringType
-                },
-                navArgument(SKILL_NAME) {
-                    type = NavType.StringType
+                navArgument(SKILL_ID) {
+                    type = NavType.LongType
                 }
             )
         ) { entry ->
-            val characterName = entry.arguments?.getString(CHARACTER_NAME)
-            val skillName = entry.arguments?.getString(SKILL_NAME)
-            if (characterName.isNullOrEmpty() || skillName.isNullOrEmpty()) {
-                throw IllegalArgumentException("Missing character or skill name")
-            }
-            RollDetail(characterName, skillName)
+            val skillId = entry.arguments?.getLong(SKILL_ID)
+                ?: throw IllegalArgumentException("Missing skill ID")
+            RollDetail(skillId)
         }
         composable(
-            "${SKILL_EDITOR}/{$CHARACTER_NAME}",
+            "${SKILL_EDITOR}/{$CHARACTER_ID}",
             arguments = listOf(
-                navArgument(CHARACTER_NAME) {
-                    type = NavType.StringType
+                navArgument(CHARACTER_ID) {
+                    type = NavType.LongType
                 }
             )
         ) { entry ->
-            val characterName = entry.arguments?.getString(CHARACTER_NAME)
-            if (characterName.isNullOrEmpty()) {
-                throw IllegalArgumentException("Must provide character name to add skill")
-            }
+            val characterId = entry.arguments?.getLong(CHARACTER_ID)
+                ?: throw IllegalArgumentException("Must provide character ID to add skill")
             // TODO add skill screen
         }
     }
@@ -120,5 +110,5 @@ fun BackButton(navController: NavHostController) {
     }
 }
 
-private fun NavHostController.navigateToSkillList(characterName: String) =
-    navigate("${SKILLS}/${characterName}")
+private fun NavHostController.navigateToSkillList(characterId: Long) =
+    navigate("${SKILLS}/${characterId}")

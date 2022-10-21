@@ -1,17 +1,25 @@
 package com.ciarasouthgate.burningwheeltesttracker.db.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.TypeConverters
+import androidx.room.*
 import com.ciarasouthgate.burningwheeltesttracker.common.*
 import com.ciarasouthgate.burningwheeltesttracker.db.Converters
 import kotlin.math.ceil
 
-@Entity(primaryKeys = ["name", "characterName"])
+@Entity(
+    foreignKeys = [ForeignKey(
+        entity = BaseCharacter::class,
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("characterId"),
+        onDelete = ForeignKey.CASCADE
+    )],
+    indices = [Index(value = ["characterId", "name"], unique = true)]
+)
 @TypeConverters(Converters::class)
 class Skill(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+    val characterId: Long,
     val name: String,
-    val characterName: String,
     exponent: Int,
     val type: Type = Type.SKILL,
     var shade: Shade = Shade.BLACK,
@@ -77,7 +85,6 @@ class Skill(
 
     init {
         require(name.isNotBlank())
-        require(characterName.isNotBlank())
         require(exponent >= MIN_EXPONENT)
         require(exponent <= MAX_EXPONENT)
         require(routineTests >= 0)

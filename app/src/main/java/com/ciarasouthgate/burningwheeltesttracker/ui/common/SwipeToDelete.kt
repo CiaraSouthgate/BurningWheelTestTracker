@@ -24,6 +24,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ciarasouthgate.burningwheeltesttracker.R
 
+private const val THRESHOLD = 0.3f
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SwipeToDelete(
@@ -37,6 +39,7 @@ fun SwipeToDelete(
     SwipeToDismiss(
         state = dismissState,
         modifier = modifier,
+        dismissThresholds = { FractionalThreshold(THRESHOLD) },
         directions = setOf(DismissDirection.EndToStart, DismissDirection.StartToEnd),
         background = {
             val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
@@ -68,7 +71,7 @@ fun SwipeToDelete(
             }
 
             val progress = dismissState.progress.fraction
-            val alpha by animateFloatAsState(if (progress < 0.5f) progress * 2 else 1.0f)
+            val alpha by animateFloatAsState(if (progress < THRESHOLD * .8) progress * 2 else 1.0f)
             val scale by animateFloatAsState(progress * 0.4F + 0.8F)
 
             Box(
@@ -91,19 +94,15 @@ fun SwipeToDelete(
         dismissContent = content
     )
 
-    LaunchedEffect(dismissState.targetValue) {
-        when (dismissState.targetValue) {
-            DismissValue.DismissedToStart -> {
-                onDelete()
-                dismissState.reset()
-            }
-            DismissValue.DismissedToEnd -> {
-                onEdit()
-                dismissState.reset()
-            }
-            else -> {}
-        }
+    when (dismissState.targetValue) {
+        DismissValue.DismissedToStart -> onDelete()
+        DismissValue.DismissedToEnd -> onEdit()
+        else -> {}
     }
 
-
+    if (dismissState.currentValue != DismissValue.Default) {
+        LaunchedEffect(Unit) {
+            dismissState.reset()
+        }
+    }
 }

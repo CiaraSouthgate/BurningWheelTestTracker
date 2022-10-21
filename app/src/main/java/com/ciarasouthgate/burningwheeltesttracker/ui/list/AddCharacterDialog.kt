@@ -1,7 +1,5 @@
 package com.ciarasouthgate.burningwheeltesttracker.ui.list
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -11,96 +9,85 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ciarasouthgate.burningwheeltesttracker.R
+import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
+import com.ciarasouthgate.burningwheeltesttracker.ui.common.TestTrackerDialog
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
 
 @Composable
 fun AddCharacterDialog(
     viewModel: CharacterListViewModel,
-    onCharacterAdded: (String) -> Unit,
+    onCharacterSaved: (Long) -> Unit,
     onDismiss: () -> Unit,
-    initialValue: String = ""
+    character: Character? = null
 ) {
-    var characterName by remember { mutableStateOf(initialValue) }
+    var characterName by remember { mutableStateOf(character?.name.orEmpty()) }
     var isError by remember { mutableStateOf(false) }
-    var isAddAttempted by remember { mutableStateOf(false) }
+    var isSaveAttempted by remember { mutableStateOf(false) }
+    val isEditing by derivedStateOf { character != null }
 
-    Dialog(onDismissRequest = onDismiss) {
-        Surface(shape = RoundedCornerShape(5.dp)) {
-            Column(
-                modifier = Modifier.padding(15.dp)
-            ) {
+    TestTrackerDialog(
+        title = stringResource(if (isEditing) R.string.edit_character else R.string.add_character),
+        onDismiss = onDismiss,
+        content = {
+            TextField(
+                value = characterName,
+                onValueChange = {
+                    characterName = it
+                    isError = false
+                },
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.Transparent
+                ),
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Words
+                ),
+                isError = isError,
+                placeholder = { Text(stringResource(R.string.name)) },
+                modifier = Modifier.align(Alignment.Center)
+            )
+            Text(
+                stringResource(R.string.name_exists),
+                style = MaterialTheme.typography.caption,
+                color = if (isError) MaterialTheme.colors.error else Color.Transparent
+            )
+        },
+        buttons = {
+            TextButton(onClick = onDismiss) {
                 Text(
-                    stringResource(R.string.add_character),
-                    style = MaterialTheme.typography.h6
+                    stringResource(R.string.cancel),
+                    style = MaterialTheme.typography.button
                 )
-
-                TextField(
-                    value = characterName,
-                    onValueChange = {
-                        characterName = it
-                        isError = false
-                    },
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.Transparent
-                    ),
-                    maxLines = 1,
-                    keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.Words
-                    ),
-                    isError = isError,
-                    placeholder = { Text(stringResource(R.string.name)) },
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
-                Text(
-                    stringResource(R.string.name_exists),
-                    style = MaterialTheme.typography.caption,
-                    color = if (isError) MaterialTheme.colors.error else Color.Transparent
-                )
-
-                Row(
-                    horizontalArrangement = Arrangement.End,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 10.dp)
-                ) {
-                    TextButton(onClick = onDismiss) {
-                        Text(
-                            stringResource(R.string.cancel),
-                            style = MaterialTheme.typography.button
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Button(
-                        onClick = {
-                            if (characterName.isBlank()) {
-                                isError = true
-                            } else if (!isError) {
-                                isAddAttempted = true
-                            }
-                        }
-                    ) {
-                        Text(
-                            stringResource(R.string.add),
-                            style = MaterialTheme.typography.button
-                        )
+            }
+            Button(
+                onClick = {
+                    if (characterName.isBlank()) {
+                        isError = true
+                    } else if (!isError) {
+                        isSaveAttempted = true
                     }
                 }
+            ) {
+                Text(
+                    stringResource(if (isEditing) R.string.save else R.string.add),
+                    style = MaterialTheme.typography.button
+                )
             }
         }
-    }
+    )
 
-    if (isAddAttempted) {
+    if (isSaveAttempted) {
         LaunchedEffect(Unit) {
-            if (viewModel.addCharacter(characterName)) {
-                onCharacterAdded(characterName)
-            } else {
-                isError = true
-            }
-            isAddAttempted = false
+            val characterId = character?.let {
+                val updatedCharacter = character.copy(
+                    character = character.character.copy(name = characterName)
+                )
+                if (viewModel.editCharacter(updatedCharacter)) it.id else null
+            } ?: viewModel.addCharacter(characterName)
+            characterId?.let { onCharacterSaved(it) } ?: run { isError = true }
+            isSaveAttempted = false
         }
     }
 }
@@ -111,7 +98,7 @@ fun AddCharacterDialogPreview() {
     TestTrackerTheme {
         AddCharacterDialog(
             hiltViewModel(),
-            onCharacterAdded = {},
+            onCharacterSaved = {},
             onDismiss = {}
         )
     }

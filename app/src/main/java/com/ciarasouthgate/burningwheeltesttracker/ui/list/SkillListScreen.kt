@@ -2,6 +2,8 @@ package com.ciarasouthgate.burningwheeltesttracker.ui.list
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -11,34 +13,38 @@ import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
 
 @Composable
 fun SkillListScreen(
-    characterName: String,
+    characterId: Long,
     onAddClicked: () -> Unit,
     onSkillClicked: (Skill) -> Unit,
     navigationIcon: @Composable () -> Unit = {},
-    viewModel: ListViewModel<Skill> = skillListViewModel(characterName)
+    viewModel: SkillListViewModel = skillListViewModel(characterId)
 ) {
+    val skills by viewModel.items.collectAsState(emptyList())
     ListScreen(
-        title = stringResource(R.string.skills_header, characterName),
+        title = viewModel.characterName.value?.let {
+            stringResource(R.string.skills_header, it)
+        }.orEmpty(),
         onAddClicked = onAddClicked,
         viewModel = viewModel,
         emptyText = stringResource(R.string.no_skills),
         navigationIcon = navigationIcon
     ) { paddingValues ->
-        SkillList(
-            skills = viewModel.items,
-            onSkillClicked = onSkillClicked,
-            modifier = Modifier.padding(paddingValues)
-        )
+        ColumnListWithDividers(
+            modifier = Modifier.padding(paddingValues),
+            items = skills,
+            key = { it.name }
+        ) {
+            SkillListItem(it, onSkillClicked)
+        }
     }
 }
 
 @Preview
 @Composable
 fun SkillListScreenPreview() {
-    val characterName = "Example Character"
     TestTrackerTheme {
         SkillListScreen(
-            characterName,
+            characterId = 1,
             onAddClicked = {},
             onSkillClicked = {}
         )

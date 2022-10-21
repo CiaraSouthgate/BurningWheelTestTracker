@@ -20,6 +20,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.common.RollType
+import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
 import com.ciarasouthgate.burningwheeltesttracker.roll.rememberRollState
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
@@ -27,24 +28,24 @@ import com.ciarasouthgate.burningwheeltesttracker.util.createTestSkill
 
 @Composable
 fun RollDetail(
-    characterName: String,
-    skillName: String,
+    skillId: Long,
     navigationIcon: @Composable () -> Unit = {},
     viewModel: RollDetailViewModel = viewModel(
-        factory = RollDetailViewModel.Factory(characterName, skillName)
+        factory = RollDetailViewModel.Factory(skillId)
     )
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
     val rollType by derivedStateOf { RollType.values()[selectedTabIndex] }
 
     val skill = viewModel.skill.observeAsState()
+    val character = viewModel.character.observeAsState()
     if (skill.value != null) {
         val rollState = rememberRollState(skill.value!!)
         Scaffold(
             topBar = {
                 SmallTopAppBar(
                     navigationIcon = navigationIcon,
-                    title = { Text(characterName) },
+                    title = { Text(character.value?.name.orEmpty()) },
                     actions = {
                         IconButton(
                             onClick = { viewModel.saveSkill(rollState.updateSkill()) }
@@ -89,8 +90,7 @@ fun RollScreenPreview() {
     val skillName = "Test Skill"
     TestTrackerTheme {
         RollDetail(
-            characterName,
-            skillName,
+            1,
             navigationIcon = {
                 IconButton(onClick = {}) {
                     Icon(Icons.Default.ArrowBack, stringResource(R.string.back))
@@ -98,6 +98,7 @@ fun RollScreenPreview() {
             },
             object : RollDetailViewModel {
                 override val skill = MutableLiveData(createTestSkill(skillName = skillName))
+                override val character = MutableLiveData(Character(name = characterName))
                 override fun saveSkill(skill: Skill) {}
             }
         )

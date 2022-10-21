@@ -82,10 +82,10 @@ fun SkillTestDisplayPreview() {
     TestTrackerTheme {
         SkillTestDisplay(
             Skill(
-                "Test Skill",
-                "CharacterName",
-                4,
-                Type.SKILL,
+                name = "Test Skill",
+                characterId = 0,
+                exponent = 4,
+                type = Type.SKILL,
                 routineTests = 2,
                 difficultTests = 0
             )

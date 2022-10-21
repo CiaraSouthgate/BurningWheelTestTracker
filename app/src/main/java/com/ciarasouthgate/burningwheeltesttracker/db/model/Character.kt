@@ -1,25 +1,30 @@
 package com.ciarasouthgate.burningwheeltesttracker.db.model
 
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.Relation
+import androidx.room.*
 
-@Entity(tableName = "Character")
+@Entity(
+    tableName = "Character",
+    indices = [Index(value = arrayOf("name"), unique = true)]
+)
 data class BaseCharacter(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
     val name: String
 )
 
 data class Character(
     @Embedded val character: BaseCharacter,
     @Relation(
-        parentColumn = "name",
-        entityColumn = "characterName"
+        parentColumn = "id",
+        entityColumn = "characterId"
     )
     val skills: List<Skill>
 ) {
     val name: String get() = character.name
+    val id: Long get() = character.id
 
-    constructor(name: String, skills: List<Skill> = emptyList()) : this(BaseCharacter(name), skills)
+    constructor(name: String, skills: List<Skill> = emptyList()) : this(
+        BaseCharacter(name = name),
+        skills
+    )
 }

@@ -2,11 +2,12 @@ package com.ciarasouthgate.burningwheeltesttracker.db.dao
 
 import androidx.room.*
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SkillDao {
     @Insert
-    suspend fun insert(skill: Skill)
+    suspend fun insert(skill: Skill): Long
 
     @Delete
     suspend fun delete(skill: Skill)
@@ -15,13 +16,13 @@ interface SkillDao {
     suspend fun update(skill: Skill)
 
     @Transaction
-    @Query("SELECT * FROM Skill WHERE characterName = :characterName")
-    suspend fun getSkillsForCharacter(characterName: String): List<Skill>
-
-    @Query("SELECT * FROM Skill WHERE characterName = :characterName AND name = :skillName")
-    suspend fun getSkill(characterName: String, skillName: String): Skill
+    @Query("SELECT * FROM Skill WHERE characterId = :characterId")
+    fun getSkillsForCharacter(characterId: Long): Flow<List<Skill>>
 
     @Transaction
-    @Query("SELECT * FROM Skill WHERE characterName = :characterName AND name LIKE '%' || :query || '%'")
-    suspend fun search(characterName: String, query: String): List<Skill>
+    @Query("SELECT * FROM Skill WHERE characterId = :characterId AND name LIKE '%' || :query || '%'")
+    fun search(characterId: Long, query: String): Flow<List<Skill>>
+
+    @Query("SELECT * FROM Skill WHERE id = :id")
+    suspend fun getSkill(id: Long): Skill
 }

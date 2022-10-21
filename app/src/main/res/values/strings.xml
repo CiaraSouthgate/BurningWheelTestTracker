@@ -14,9 +14,12 @@
     <string name="collapse">Collapse</string>
     <string name="decrement">Decrement</string>
     <string name="deeds">Deeds</string>
+    <string name="delete">Delete</string>
+    <string name="delete_character_title">Delete %1$s?</string>
     <string name="dice_rolled">Dice</string>
     <string name="disadvantage">Disadvantage</string>
     <string name="doubled">Doubled</string>
+    <string name="edit_character">Edit Character Name</string>
     <string name="expand">Expand</string>
     <string name="fate">Fate</string>
     <string name="forks">FoRKs</string>
@@ -43,7 +46,6 @@
     <string name="search">Search</string>
     <string name="skills_header">%s\'s Skills</string>
     <string name="name_exists">Character name already exists</string>
-    <string name="delete">Delete</string>
     <string name="edit">Edit</string>
 
     <plurals name="num_skills">

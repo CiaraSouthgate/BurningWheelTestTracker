@@ -1,21 +1,13 @@
 package com.ciarasouthgate.burningwheeltesttracker.ui.list
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
 
 abstract class ListViewModel<ItemType> : ViewModel() {
-    var items by mutableStateOf<List<ItemType>>(emptyList())
+    abstract val items: Flow<List<ItemType>>
 
-    abstract suspend fun getUpdatedList(searchText: String): List<ItemType>
+    abstract fun getAll(): Flow<List<ItemType>>
+    abstract fun filterList(searchText: String)
 
-    fun onSearchTextChanged(text: String) {
-        viewModelScope.launch {
-            val updatedList = getUpdatedList(text)
-            items = updatedList
-        }
-    }
+    fun onSearchTextChanged(text: String) = filterList(text)
 }

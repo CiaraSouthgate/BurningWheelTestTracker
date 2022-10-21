@@ -13,17 +13,16 @@ fun createTestCharacters(num: Int): List<Character> {
         val name = "Character Name $i"
         val numSkills = Random.nextInt(1, 20)
 
-        val skills = createTestSkillList(numSkills, name)
+        val skills = createTestSkillList(numSkills)
 
         Character(name, skills)
     }
 }
 
-fun createTestSkillList(num: Int, characterName: String): List<Skill> {
+fun createTestSkillList(num: Int): List<Skill> {
     return (1..num).map { j ->
         createRandomTestSkill(
-            "Test Skill $j",
-            characterName
+            "Test Skill $j"
         )
     }
 }
@@ -40,12 +39,11 @@ fun createTestStatList(): List<Skill> {
 
 fun createRandomTestSkill(
     skillName: String = "Test Skill",
-    characterName: String = "Test Character",
     type: Type = Type.SKILL
 ) = Skill(
-    skillName,
-    characterName,
-    Random.nextInt(1, MAX_EXPONENT),
+    name = skillName,
+    characterId = 0,
+    exponent = Random.nextInt(1, MAX_EXPONENT),
     type = type,
     routineTests = Random.nextInt(0, MAX_TESTS_NEEDED),
     difficultTests = Random.nextInt(0, MAX_TESTS_NEEDED),
@@ -58,7 +56,6 @@ fun createRandomTestSkill(
 
 fun createTestSkill(
     skillName: String = "Test Skill",
-    characterName: String = "Test Character",
     exponent: Int = 3,
     routine: Int = 0,
     difficult: Int = 0,
@@ -69,15 +66,15 @@ fun createTestSkill(
     shade: Shade = Shade.BLACK,
     type: Type = Type.SKILL
 ) = Skill(
-    skillName,
-    characterName,
-    exponent,
-    type,
-    shade,
-    routine,
-    difficult,
-    challenging,
-    fateSpent,
-    personaSpent,
-    deedsSpent
+    name = skillName,
+    characterId = 0,
+    exponent = exponent,
+    type = type,
+    shade = shade,
+    routineTests = routine,
+    difficultTests = difficult,
+    challengingTests = challenging,
+    fateSpent = fateSpent,
+    personaSpent = personaSpent,
+    deedsSpent = deedsSpent
 )
