@@ -5,8 +5,10 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun SkillEditor(
-    characterName: String,
-    modifier: Modifier = Modifier
+    characterId: Long,
+    modifier: Modifier = Modifier,
+    skillId: Long? = null,
+    viewModel: SkillViewModel = skillEditorViewModel(characterId, skillId)
 ) {
-
+    val state: SkillEditorState by d
 }

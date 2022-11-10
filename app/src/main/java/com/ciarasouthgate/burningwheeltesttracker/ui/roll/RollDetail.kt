@@ -17,12 +17,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.common.RollType
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
 import com.ciarasouthgate.burningwheeltesttracker.roll.rememberRollState
+import com.ciarasouthgate.burningwheeltesttracker.ui.skill.SkillViewModel
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.createTestSkill
 
@@ -30,9 +30,7 @@ import com.ciarasouthgate.burningwheeltesttracker.util.createTestSkill
 fun RollDetail(
     skillId: Long,
     navigationIcon: @Composable () -> Unit = {},
-    viewModel: RollDetailViewModel = viewModel(
-        factory = RollDetailViewModel.Factory(skillId)
-    )
+    viewModel: SkillViewModel = rollDetailViewModel(skillId)
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
     val rollType by derivedStateOf { RollType.values()[selectedTabIndex] }
@@ -96,7 +94,7 @@ fun RollScreenPreview() {
                     Icon(Icons.Default.ArrowBack, stringResource(R.string.back))
                 }
             },
-            object : RollDetailViewModel {
+            object : SkillViewModel {
                 override val skill = MutableLiveData(createTestSkill(skillName = skillName))
                 override val character = MutableLiveData(Character(name = characterName))
                 override fun saveSkill(skill: Skill) {}

@@ -93,11 +93,16 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
             arguments = listOf(
                 navArgument(CHARACTER_ID) {
                     type = NavType.LongType
+                },
+                navArgument(SKILL_ID) {
+                    type = NavType.LongType
+                    defaultValue = null
                 }
             )
         ) { entry ->
             val characterId = entry.arguments?.getLong(CHARACTER_ID)
                 ?: throw IllegalArgumentException("Must provide character ID to add skill")
+            val skillId = entry.arguments?.getLong(SKILL_ID)
             // TODO add skill screen
         }
     }

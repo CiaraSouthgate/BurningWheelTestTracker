@@ -1,4 +1,4 @@
-package com.ciarasouthgate.burningwheeltesttracker.ui.roll
+package com.ciarasouthgate.burningwheeltesttracker.ui.skill
 
 import android.app.Activity
 import androidx.compose.runtime.Composable
@@ -8,40 +8,48 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ciarasouthgate.burningwheeltesttracker.MainActivity
 import com.ciarasouthgate.burningwheeltesttracker.data.AppRepository
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
-import com.ciarasouthgate.burningwheeltesttracker.ui.skill.BaseSkillViewModel
+import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.launch
 
-class RollDetailViewModel @AssistedInject constructor(
-    @Assisted skillId: Long,
+class SkillEditorViewModel @AssistedInject constructor(
+    @Assisted characterId: Long,
+    @Assisted skillId: Long?,
     repository: AppRepository
 ) : BaseSkillViewModel(skillId, repository) {
-    private val _character = MediatorLiveData<Character?>().apply {
-        addSource(skill) { skill ->
-            if (skill != null) viewModelScope.launch {
-                value = repository.getCharacter(skill.characterId)
-            }
+    private val _character = MutableLiveData<Character?>(null)
+    override val character: LiveData<Character?> = _character
+
+    init {
+        viewModelScope.launch {
+            _character.value = repository.getCharacter(characterId)
         }
     }
-    override val character: LiveData<Character?> = _character
+
+    override fun saveSkill(skill: Skill) {
+        viewModelScope.launch {
+            repository.updateSkill(skill)
+        }
+    }
 
     @AssistedFactory
     interface Factory {
-        fun create(skillId: Long): RollDetailViewModel
+        fun create(characterId: Long, skillId: Long?): SkillEditorViewModel
     }
 
     companion object {
         fun provideFactory(
             assistedFactory: Factory,
-            skillId: Long
+            characterId: Long,
+            skillId: Long?
         ) = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                if (modelClass.isAssignableFrom(RollDetailViewModel::class.java)) {
+                if (modelClass.isAssignableFrom(SkillEditorViewModel::class.java)) {
                     @Suppress("UNCHECKED_CAST")
-                    return assistedFactory.create(skillId) as T
+                    return assistedFactory.create(characterId, skillId) as T
                 }
                 throw IllegalArgumentException("Unknown ViewModel class")
             }
@@ -50,13 +58,16 @@ class RollDetailViewModel @AssistedInject constructor(
 }
 
 @Composable
-fun rollDetailViewModel(
-    skillId: Long
-): RollDetailViewModel {
+fun skillEditorViewModel(
+    characterId: Long,
+    skillId: Long?
+): SkillEditorViewModel {
     val factory = EntryPointAccessors.fromActivity(
         LocalContext.current as Activity,
         MainActivity.ViewModelFactoryProvider::class.java
-    ).rollDetailViewModelFactory()
+    ).skillEditorViewModelFactory()
 
-    return viewModel(factory = RollDetailViewModel.provideFactory(factory, skillId))
+    return viewModel(
+        factory = SkillEditorViewModel.provideFactory(factory, characterId, skillId)
+    )
 }
