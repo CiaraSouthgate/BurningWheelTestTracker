@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ciarasouthgate.burningwheeltesttracker.R
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 
 @Composable
 fun Counter(
@@ -68,7 +68,7 @@ fun CounterWithLabel(
     textStyle: TextStyle = MaterialTheme.typography.h6
 ) {
     CounterWithLabel(
-        { CounterLabel(labelText) },
+        { ComponentLabel(labelText) },
         value,
         onIncrement,
         onDecrement,
@@ -90,11 +90,12 @@ fun CounterWithLabel(
     labelPosition: LabelPosition = LabelPosition.BOTTOM,
     textStyle: TextStyle = MaterialTheme.typography.h6
 ) {
-    Column(
+    LabelledComponent(
+        label = label,
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        alignment = Alignment.CenterHorizontally,
+        labelPosition = labelPosition
     ) {
-        if (labelPosition == LabelPosition.TOP) label()
         Counter(
             value,
             onIncrement,
@@ -103,33 +104,13 @@ fun CounterWithLabel(
             textStyle = textStyle,
             modifier = Modifier.fillMaxWidth()
         )
-        if (labelPosition == LabelPosition.BOTTOM) label()
     }
-}
-
-enum class LabelPosition {
-    TOP, BOTTOM
-}
-
-@Composable
-fun CounterLabel(
-    text: String,
-    modifier: Modifier = Modifier,
-    color: Color = Color.Unspecified,
-    style: TextStyle = MaterialTheme.typography.subtitle2
-) {
-    Text(
-        text,
-        style = style,
-        color = color,
-        modifier = modifier
-    )
 }
 
 @Preview
 @Composable
 fun CounterPreview() {
-    TestTrackerTheme {
+    AppTheme {
         var value by remember { mutableStateOf(0) }
         CounterWithLabel(
             labelText = "Label",

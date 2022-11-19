@@ -22,9 +22,10 @@ import com.ciarasouthgate.burningwheeltesttracker.common.RollType
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
 import com.ciarasouthgate.burningwheeltesttracker.roll.rememberRollState
-import com.ciarasouthgate.burningwheeltesttracker.ui.skill.SkillViewModel
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
+import com.ciarasouthgate.burningwheeltesttracker.viewmodel.SkillViewModel
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.createTestSkill
+import com.ciarasouthgate.burningwheeltesttracker.viewmodel.rollDetailViewModel
 
 @Composable
 fun RollDetail(
@@ -34,6 +35,7 @@ fun RollDetail(
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
     val rollType by derivedStateOf { RollType.values()[selectedTabIndex] }
+    var onSaveAttempted by remember { mutableStateOf(false) }
 
     val skill = viewModel.skill.observeAsState()
     val character = viewModel.character.observeAsState()
@@ -46,7 +48,7 @@ fun RollDetail(
                     title = { Text(character.value?.name.orEmpty()) },
                     actions = {
                         IconButton(
-                            onClick = { viewModel.saveSkill(rollState.updateSkill()) }
+                            onClick = { onSaveAttempted = true }
                         ) {
                             Icon(Icons.Default.Save, stringResource(R.string.save))
                         }
@@ -78,6 +80,12 @@ fun RollDetail(
                 )
             }
         }
+
+        if (onSaveAttempted) {
+            LaunchedEffect(Unit) {
+                viewModel.editSkill(rollState.updateSkill())
+            }
+        }
     }
 }
 
@@ -86,7 +94,7 @@ fun RollDetail(
 fun RollScreenPreview() {
     val characterName = "Test Character"
     val skillName = "Test Skill"
-    TestTrackerTheme {
+    AppTheme {
         RollDetail(
             1,
             navigationIcon = {
@@ -97,7 +105,9 @@ fun RollScreenPreview() {
             object : SkillViewModel {
                 override val skill = MutableLiveData(createTestSkill(skillName = skillName))
                 override val character = MutableLiveData(Character(name = characterName))
-                override fun saveSkill(skill: Skill) {}
+                override suspend fun addSkill(skill: Skill): Long = 1L
+                override suspend fun editSkill(skill: Skill): Boolean = true
+                override suspend fun deleteSkill(skill: Skill) {}
             }
         )
     }

@@ -1,6 +1,7 @@
 package com.ciarasouthgate.burningwheeltesttracker.ui.skill
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateMap
@@ -8,17 +9,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.common.ArthaType
 import com.ciarasouthgate.burningwheeltesttracker.common.Shade
 import com.ciarasouthgate.burningwheeltesttracker.common.TestType
+import com.ciarasouthgate.burningwheeltesttracker.common.Type
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
-import com.ciarasouthgate.burningwheeltesttracker.ui.common.CounterLabel
-import com.ciarasouthgate.burningwheeltesttracker.ui.common.CounterWithLabel
-import com.ciarasouthgate.burningwheeltesttracker.ui.common.LabelPosition
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
+import com.ciarasouthgate.burningwheeltesttracker.skill.SkillEditorState
+import com.ciarasouthgate.burningwheeltesttracker.skill.rememberSkillEditorState
+import com.ciarasouthgate.burningwheeltesttracker.ui.common.*
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 
 @Composable
 fun SkillEditorContent(
@@ -30,22 +33,45 @@ fun SkillEditorContent(
         modifier = modifier.padding(horizontal = 10.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
-        AddSkillSection {
+        AddSkillSection(modifier = Modifier.fillMaxWidth()) {
             Column {
-                TextField(
-                    value = state.name,
-                    onValueChange = { state.name = it },
-                    label = { Text(stringResource(R.string.skill_name)) },
-                    singleLine = true,
-                    isError = skillNameError,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.Transparent
+                Row(verticalAlignment = Alignment.Top) {
+                    TextField(
+                        value = state.name,
+                        onValueChange = { state.name = it },
+                        label = {
+                            Text(
+                                stringResource(
+                                    if (state.type == Type.SKILL) R.string.skill_name else R.string.stat_name
+                                )
+                            )
+                        },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Words
+                        ),
+                        isError = skillNameError,
+                        modifier = Modifier.weight(3f),
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.Transparent
+                        )
                     )
-                )
+                    LabelledComponent(
+                        label = { SkillEditorLabel(stringResource(R.string.is_stat)) }
+                    ) {
+                        Switch(
+                            checked = state.type == Type.STAT,
+                            onCheckedChange = {
+                                state.type = if (it) Type.STAT else Type.SKILL
+                            }
+                        )
+                    }
+                }
 
                 Row(
-                    verticalAlignment = Alignment.Top
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.spacedBy(20.dp),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     ShadeSelector(
                         value = state.shade,
@@ -66,7 +92,6 @@ fun SkillEditorContent(
                 }
             }
         }
-
 
         MultiCounterRow(
             R.string.tests_completed,
@@ -128,6 +153,12 @@ private fun ShadeSelector(
 }
 
 @Composable
+fun SkillEditorLabel(text: String) {
+    val labelColor = MaterialTheme.colors.onSurface.copy(ContentAlpha.medium)
+    ComponentLabel(text, color = labelColor, style = MaterialTheme.typography.caption)
+}
+
+@Composable
 private fun AddSkillCounter(
     label: String,
     value: Int,
@@ -138,13 +169,7 @@ private fun AddSkillCounter(
 ) {
     val labelColor = MaterialTheme.colors.onSurface.copy(ContentAlpha.medium)
     CounterWithLabel(
-        label = {
-            CounterLabel(
-                label,
-                color = labelColor,
-                style = MaterialTheme.typography.caption
-            )
-        },
+        label = { SkillEditorLabel(label) },
         value = value,
         onIncrement = onIncrement,
         onDecrement = onDecrement,
@@ -192,7 +217,7 @@ private fun AddSkillSection(
     titleRes: Int? = null,
     content: @Composable () -> Unit
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.fillMaxWidth()) {
         titleRes?.let {
             Text(
                 stringResource(titleRes),
@@ -209,7 +234,7 @@ private fun AddSkillSection(
 @Preview
 @Composable
 fun SkillEditorContentPreview() {
-    TestTrackerTheme {
+    AppTheme {
         val character = Character("Test Character", emptyList())
         val state = rememberSkillEditorState(character)
         SkillEditorContent(state, false)

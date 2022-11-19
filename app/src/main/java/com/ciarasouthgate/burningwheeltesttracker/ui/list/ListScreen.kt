@@ -11,9 +11,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.AppBarWithSearch
+import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.ListViewModel
 
 @Composable
 fun <ItemType> ListScreen(
@@ -45,8 +47,10 @@ fun <ItemType> ListScreen(
                 emptyText,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 20.dp),
-                textAlign = TextAlign.Center
+                    .padding(top = 20.dp)
+                    .alpha(0.75f),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.body1
             )
         } else {
             content(paddingValues)

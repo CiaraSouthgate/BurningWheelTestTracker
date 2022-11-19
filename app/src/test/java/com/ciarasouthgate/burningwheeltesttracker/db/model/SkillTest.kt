@@ -290,14 +290,6 @@ internal class SkillTest {
             createTestSkill(skillName = " ")
         }
 
-        assertThrows("Empty character name accepted", IllegalArgumentException::class.java) {
-            createTestSkill(characterName = "")
-        }
-
-        assertThrows("Blank character name accepted", IllegalArgumentException::class.java) {
-            createTestSkill(characterName = " ")
-        }
-
         assertThrows("Negative exponent accepted", IllegalArgumentException::class.java) {
             createTestSkill(exponent = -1)
         }

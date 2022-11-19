@@ -12,14 +12,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.TestTrackerDialog
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.util.getCharacterListViewModel
+import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.CharacterListViewModel
+import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.CharacterListViewModelImpl
 
 @Composable
 fun CharacterListScreen(
     onCharacterAdded: (Long) -> Unit,
     onCharacterClicked: (Character) -> Unit,
     navigationIcon: @Composable () -> Unit = {},
-    viewModel: CharacterListViewModel = hiltViewModel()
+    viewModel: CharacterListViewModel = hiltViewModel<CharacterListViewModelImpl>()
 ) {
     val characters by viewModel.items.collectAsState(emptyList())
 
@@ -58,8 +61,9 @@ fun CharacterListScreen(
     }
     if (showCharacterDialog) {
         AddCharacterDialog(
-            viewModel,
             onCharacterSaved = onCharacterAdded,
+            onEdit = viewModel::editCharacter,
+            onAdd = viewModel::addCharacter,
             onDismiss = {
                 activeCharacter = null
                 showCharacterDialog = false
@@ -83,7 +87,7 @@ fun CharacterListScreen(
                         Text(stringResource(R.string.cancel))
                     }
                     Button(onClick = {
-                        activeCharacter?.let { viewModel.deleteCharacter(it) }
+                        activeCharacter?.let { viewModel.deleteListItem(it) }
                         activeCharacter = null
                         showDeleteDialog = false
                     }) {
@@ -99,10 +103,11 @@ fun CharacterListScreen(
 @Preview
 @Composable
 fun PreviewCharacterListScreen() {
-    TestTrackerTheme {
+    AppTheme {
         CharacterListScreen(
             onCharacterAdded = {},
-            onCharacterClicked = {}
+            onCharacterClicked = {},
+            viewModel = getCharacterListViewModel()
         )
     }
 }

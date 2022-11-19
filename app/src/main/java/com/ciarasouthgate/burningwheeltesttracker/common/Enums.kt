@@ -6,8 +6,9 @@ enum class Shade(val prettyName: String) {
     WHITE("White")
 }
 
-enum class Type {
-    STAT, SKILL
+enum class Type(val prettyName: String) {
+    SKILL("Skill"),
+    STAT("Stat")
 }
 
 enum class TestType(val prettyName: String) {

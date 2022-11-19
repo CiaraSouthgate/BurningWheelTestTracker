@@ -1,11 +1,17 @@
 package com.ciarasouthgate.burningwheeltesttracker.util
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import com.ciarasouthgate.burningwheeltesttracker.common.MAX_EXPONENT
 import com.ciarasouthgate.burningwheeltesttracker.common.MAX_TESTS_NEEDED
 import com.ciarasouthgate.burningwheeltesttracker.common.Shade
 import com.ciarasouthgate.burningwheeltesttracker.common.Type
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
+import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.CharacterListViewModel
+import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.SkillListViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlin.random.Random
 
 fun createTestCharacters(num: Int): List<Character> {
@@ -78,3 +84,40 @@ fun createTestSkill(
     personaSpent = personaSpent,
     deedsSpent = deedsSpent
 )
+
+fun getCharacterListViewModel(
+    characterList: List<Character> = createTestCharacters(5)
+) = object : CharacterListViewModel {
+    override suspend fun addCharacter(characterName: String): Long? = null
+    override suspend fun editCharacter(character: Character): Boolean = false
+    override fun deleteCharacter(character: Character) {}
+
+    override var items: Flow<List<Character>> = flowOf(characterList)
+    override fun getAll(): Flow<List<Character>> = flowOf(characterList)
+
+
+    override fun filterList(searchText: String) {
+        items = flowOf(characterList.filter { it.name.contains(searchText) })
+    }
+
+    override fun onSearchTextChanged(text: String) {
+        filterList(text)
+    }
+}
+
+fun getSkillListViewModel(
+    skillList: List<Skill> = createTestSkillList(5)
+) = object : SkillListViewModel {
+    override val characterName: State<String?> = mutableStateOf("Test Character")
+    override var items: Flow<List<Skill>> = flowOf(skillList)
+    override fun getAll(): Flow<List<Skill>> = flowOf(skillList)
+
+    override fun filterList(searchText: String) {
+        items = flowOf(skillList.filter { it.name.contains(searchText) })
+    }
+
+    override fun onSearchTextChanged(text: String) {
+        filterList(text)
+    }
+
+}

@@ -9,17 +9,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.TestTrackerDialog
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 
 @Composable
 fun AddCharacterDialog(
-    viewModel: CharacterListViewModel,
     onCharacterSaved: (Long) -> Unit,
     onDismiss: () -> Unit,
+    onAdd: suspend (String) -> Long?,
+    onEdit: suspend (Character) -> Boolean,
     character: Character? = null
 ) {
     var characterName by remember { mutableStateOf(character?.name.orEmpty()) }
@@ -31,7 +31,7 @@ fun AddCharacterDialog(
         title = stringResource(if (isEditing) R.string.edit_character else R.string.add_character),
         onDismiss = onDismiss,
         content = {
-            TextField(
+            OutlinedTextField(
                 value = characterName,
                 onValueChange = {
                     characterName = it
@@ -57,7 +57,7 @@ fun AddCharacterDialog(
         buttons = {
             TextButton(onClick = onDismiss) {
                 Text(
-                    stringResource(R.string.cancel),
+                    stringResource(R.string.cancel).uppercase(),
                     style = MaterialTheme.typography.button
                 )
             }
@@ -71,7 +71,7 @@ fun AddCharacterDialog(
                 }
             ) {
                 Text(
-                    stringResource(if (isEditing) R.string.save else R.string.add),
+                    stringResource(if (isEditing) R.string.save else R.string.add).uppercase(),
                     style = MaterialTheme.typography.button
                 )
             }
@@ -84,8 +84,8 @@ fun AddCharacterDialog(
                 val updatedCharacter = character.copy(
                     character = character.character.copy(name = characterName)
                 )
-                if (viewModel.editCharacter(updatedCharacter)) it.id else null
-            } ?: viewModel.addCharacter(characterName)
+                if (onEdit(updatedCharacter)) it.id else null
+            } ?: onAdd(characterName)
             characterId?.let { onCharacterSaved(it) } ?: run { isError = true }
             isSaveAttempted = false
         }
@@ -95,10 +95,11 @@ fun AddCharacterDialog(
 @Preview
 @Composable
 fun AddCharacterDialogPreview() {
-    TestTrackerTheme {
+    AppTheme {
         AddCharacterDialog(
-            hiltViewModel(),
             onCharacterSaved = {},
+            onAdd = { null },
+            onEdit = { true },
             onDismiss = {}
         )
     }

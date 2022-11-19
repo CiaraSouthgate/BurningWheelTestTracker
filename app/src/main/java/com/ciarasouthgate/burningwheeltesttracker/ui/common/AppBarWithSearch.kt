@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.ciarasouthgate.burningwheeltesttracker.R
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 
 @Composable
 fun AppBarWithSearch(
@@ -71,14 +71,8 @@ private fun DefaultAppBar(
     modifier: Modifier = Modifier,
     navigationIcon: @Composable () -> Unit = {}
 ) {
-    CenterAlignedTopAppBar(
-        title = {
-            Text(
-                title,
-                style = MaterialTheme.typography.h6,
-                textAlign = TextAlign.Center
-            )
-        },
+    TestTrackerAppBar(
+        title = title,
         actions = {
             IconButton(onClick = onSearchPressed) {
                 Icon(
@@ -134,7 +128,7 @@ private fun SearchAppBar(
 @Preview
 @Composable
 fun SearchBarPreview() {
-    TestTrackerTheme {
+    AppTheme {
         AppBarWithSearch("Test", {})
     }
 }

@@ -24,6 +24,23 @@ val Alegreya = FontFamily(
     Font(R.font.alegreya_blackitalic, FontWeight.Black, FontStyle.Italic)
 )
 
+val AlegreyaSans = FontFamily(
+    Font(R.font.alegreyasans_thin, FontWeight.Thin, FontStyle.Normal),
+    Font(R.font.alegreyasans_thinitalic, FontWeight.Thin, FontStyle.Italic),
+    Font(R.font.alegreyasans_light, FontWeight.Light, FontStyle.Normal),
+    Font(R.font.alegreyasans_lightitalic, FontWeight.Light, FontStyle.Italic),
+    Font(R.font.alegreyasans_regular, FontWeight.Normal, FontStyle.Normal),
+    Font(R.font.alegreyasans_italic, FontWeight.Normal, FontStyle.Italic),
+    Font(R.font.alegreyasans_medium, FontWeight.Medium, FontStyle.Normal),
+    Font(R.font.alegreyasans_mediumitalic, FontWeight.Medium, FontStyle.Italic),
+    Font(R.font.alegreyasans_bold, FontWeight.Bold, FontStyle.Normal),
+    Font(R.font.alegreyasans_bolditalic, FontWeight.Bold, FontStyle.Italic),
+    Font(R.font.alegreyasans_extrabold, FontWeight.ExtraBold, FontStyle.Normal),
+    Font(R.font.alegreyasans_extrabolditalic, FontWeight.ExtraBold, FontStyle.Italic),
+    Font(R.font.alegreyasans_black, FontWeight.Black, FontStyle.Normal),
+    Font(R.font.alegreyasans_blackitalic, FontWeight.Black, FontStyle.Italic)
+)
+
 val Bitter = FontFamily(
     Font(R.font.bitter_regular, FontWeight.Normal, FontStyle.Normal),
     Font(R.font.bitter_italic, FontWeight.Normal, FontStyle.Italic),
@@ -41,79 +58,79 @@ val Bitter = FontFamily(
 
 val AppTypography = Typography(
     h1 = TextStyle(
-        fontFamily = Alegreya,
+        fontFamily = AlegreyaSans,
         fontWeight = FontWeight.Light,
         fontSize = 108.sp,
         letterSpacing = (-1.5).sp
     ),
     h2 = TextStyle(
-        fontFamily = Alegreya,
+        fontFamily = AlegreyaSans,
         fontWeight = FontWeight.Light,
         fontSize = 68.sp,
         letterSpacing = (-0.5).sp
     ),
     h3 = TextStyle(
-        fontFamily = Alegreya,
+        fontFamily = AlegreyaSans,
         fontWeight = FontWeight.Normal,
         fontSize = 54.sp,
         letterSpacing = 0.sp
     ),
     h4 = TextStyle(
-        fontFamily = Alegreya,
+        fontFamily = AlegreyaSans,
         fontWeight = FontWeight.Normal,
         fontSize = 38.sp,
         letterSpacing = 0.25.sp
     ),
     h5 = TextStyle(
-        fontFamily = Alegreya,
+        fontFamily = AlegreyaSans,
         fontWeight = FontWeight.Normal,
         fontSize = 27.sp,
         letterSpacing = 0.sp
     ),
     h6 = TextStyle(
-        fontFamily = Alegreya,
+        fontFamily = AlegreyaSans,
         fontWeight = FontWeight.Medium,
         fontSize = 23.sp,
         letterSpacing = 0.15.sp
     ),
     subtitle1 = TextStyle(
-        fontFamily = Alegreya,
+        fontFamily = AlegreyaSans,
         fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
         letterSpacing = 0.15.sp
     ),
     subtitle2 = TextStyle(
-        fontFamily = Alegreya,
+        fontFamily = AlegreyaSans,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
         letterSpacing = 0.1.sp
     ),
     body1 = TextStyle(
-        fontFamily = Alegreya,
+        fontFamily = AlegreyaSans,
         fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
         letterSpacing = 0.5.sp
     ),
     body2 = TextStyle(
-        fontFamily = Alegreya,
+        fontFamily = AlegreyaSans,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         letterSpacing = 0.25.sp
     ),
     button = TextStyle(
-        fontFamily = Alegreya,
+        fontFamily = AlegreyaSans,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
         letterSpacing = 1.25.sp
     ),
     caption = TextStyle(
-        fontFamily = Alegreya,
+        fontFamily = AlegreyaSans,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         letterSpacing = 0.4.sp
     ),
     overline = TextStyle(
-        fontFamily = Alegreya,
+        fontFamily = AlegreyaSans,
         fontWeight = FontWeight.Normal,
         fontSize = 11.sp,
         letterSpacing = 1.5.sp

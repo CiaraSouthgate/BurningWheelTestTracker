@@ -17,6 +17,7 @@ import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.ui.list.CharacterListScreen
 import com.ciarasouthgate.burningwheeltesttracker.ui.list.SkillListScreen
 import com.ciarasouthgate.burningwheeltesttracker.ui.roll.RollDetail
+import com.ciarasouthgate.burningwheeltesttracker.ui.skill.SkillEditor
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -73,6 +74,9 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
                         "${ROLL}/${it.id}"
                     )
                 },
+                onSkillEdit = { skill ->
+                    navController.navigate("${SKILL_EDITOR}/${characterId}/${skill.id}")
+                },
                 navigationIcon = { BackButton(navController) }
             )
         }
@@ -95,15 +99,20 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
                     type = NavType.LongType
                 },
                 navArgument(SKILL_ID) {
-                    type = NavType.LongType
-                    defaultValue = null
+                    nullable = true
+                    type = NavType.StringType
                 }
             )
         ) { entry ->
             val characterId = entry.arguments?.getLong(CHARACTER_ID)
                 ?: throw IllegalArgumentException("Must provide character ID to add skill")
-            val skillId = entry.arguments?.getLong(SKILL_ID)
-            // TODO add skill screen
+            val skillId = entry.arguments?.getString(SKILL_ID)?.toLong()
+            SkillEditor(
+                characterId = characterId,
+                skillId = skillId,
+                navigationIcon = { BackButton(navController) },
+                onSkillSaved = { navController.popBackStack() }
+            )
         }
     }
 }

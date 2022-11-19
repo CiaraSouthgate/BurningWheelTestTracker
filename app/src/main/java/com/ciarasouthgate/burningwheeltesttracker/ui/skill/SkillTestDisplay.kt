@@ -24,7 +24,8 @@ import com.ciarasouthgate.burningwheeltesttracker.common.MAX_TESTS_NEEDED
 import com.ciarasouthgate.burningwheeltesttracker.common.TestType
 import com.ciarasouthgate.burningwheeltesttracker.common.Type
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Alegreya
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 
 @Composable
 fun SkillTestDisplay(
@@ -48,7 +49,7 @@ fun SkillTestRow(type: TestType, skill: Skill) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
             type.prettyName[0].toString(),
-            style = MaterialTheme.typography.caption,
+            style = MaterialTheme.typography.caption.copy(fontFamily = Alegreya),
             modifier = Modifier
                 .width(iconSize)
                 .alignByBaseline(),
@@ -79,7 +80,7 @@ fun SkillTestRow(type: TestType, skill: Skill) {
 @Composable
 @Preview
 fun SkillTestDisplayPreview() {
-    TestTrackerTheme {
+    AppTheme {
         SkillTestDisplay(
             Skill(
                 name = "Test Skill",

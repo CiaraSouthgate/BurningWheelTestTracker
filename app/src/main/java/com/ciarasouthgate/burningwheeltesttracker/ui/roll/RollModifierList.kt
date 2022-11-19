@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.Counter
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.toggle
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 
 @Composable
 fun RollModifierList(
@@ -101,7 +101,7 @@ fun RollModifierListPreview() {
         BooleanRollModifier("Doubled", doubled)
     )
 
-    TestTrackerTheme {
+    AppTheme {
         RollModifierList(rollModifiers = modifiers)
     }
 }

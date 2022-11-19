@@ -4,10 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.ciarasouthgate.burningwheeltesttracker.navigation.TrackerNavHost
-import com.ciarasouthgate.burningwheeltesttracker.ui.list.SkillListViewModel
-import com.ciarasouthgate.burningwheeltesttracker.ui.roll.RollDetailViewModel
-import com.ciarasouthgate.burningwheeltesttracker.ui.skill.SkillEditorViewModel
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.TestTrackerTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.viewmodel.RollDetailViewModel
+import com.ciarasouthgate.burningwheeltesttracker.viewmodel.SkillEditorViewModel
+import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.SkillListViewModelImpl
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            TestTrackerTheme {
+            AppTheme {
                 TrackerNavHost()
             }
         }
@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
     @EntryPoint
     @InstallIn(ActivityComponent::class)
     interface ViewModelFactoryProvider {
-        fun skillListViewModelFactory(): SkillListViewModel.Factory
+        fun skillListViewModelFactory(): SkillListViewModelImpl.Factory
         fun rollDetailViewModelFactory(): RollDetailViewModel.Factory
         fun skillEditorViewModelFactory(): SkillEditorViewModel.Factory
     }

@@ -93,6 +93,9 @@ class Skill(
         require(fateSpent >= 0)
         require(personaSpent >= 0)
         require(deedsSpent >= 0)
+
+        checkArthaAdvancement()
+        checkExponentAdvancement()
     }
 
     private val requiredRoutineTests: Int
