@@ -3,11 +3,10 @@ package com.ciarasouthgate.burningwheeltesttracker.ui.roll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -22,11 +21,12 @@ import com.ciarasouthgate.burningwheeltesttracker.common.RollType
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
 import com.ciarasouthgate.burningwheeltesttracker.roll.rememberRollState
-import com.ciarasouthgate.burningwheeltesttracker.viewmodel.SkillViewModel
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material2AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.createTestSkill
+import com.ciarasouthgate.burningwheeltesttracker.viewmodel.SkillViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.rollDetailViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RollDetail(
     skillId: Long,
@@ -94,7 +94,7 @@ fun RollDetail(
 fun RollScreenPreview() {
     val characterName = "Test Character"
     val skillName = "Test Skill"
-    Material2AppTheme {
+    Material3AppTheme {
         RollDetail(
             1,
             navigationIcon = {

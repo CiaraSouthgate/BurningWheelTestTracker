@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9c76d3785f45e75952cbebaebe1ac42a",
+    "identityHash": "4ae4a5c731133d919ac022813294e229",
     "entities": [
       {
         "tableName": "Character",
@@ -42,7 +42,7 @@
       },
       {
         "tableName": "Skill",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `characterId` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` INTEGER NOT NULL, `shade` INTEGER NOT NULL, `aristeia_available` INTEGER NOT NULL, `aristeia_spent` INTEGER NOT NULL, `exponent` INTEGER NOT NULL, `tests_routine` INTEGER NOT NULL, `tests_difficult` INTEGER NOT NULL, `tests_challenging` INTEGER NOT NULL, `spent_fate` INTEGER NOT NULL, `spent_persona` INTEGER NOT NULL, `spent_deeds` INTEGER NOT NULL, FOREIGN KEY(`characterId`) REFERENCES `Character`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `characterId` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` INTEGER NOT NULL, `shade` INTEGER NOT NULL, `aristeia_available` INTEGER NOT NULL, `aristeia_spent` INTEGER NOT NULL, `success_required` INTEGER NOT NULL, `exponent` INTEGER NOT NULL, `tests_routine` INTEGER NOT NULL, `tests_difficult` INTEGER NOT NULL, `tests_challenging` INTEGER NOT NULL, `spent_fate` INTEGER NOT NULL, `spent_persona` INTEGER NOT NULL, `spent_deeds` INTEGER NOT NULL, FOREIGN KEY(`characterId`) REFERENCES `Character`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -83,6 +83,12 @@
           {
             "fieldPath": "aristeiaUsed",
             "columnName": "aristeia_spent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "successRequired",
+            "columnName": "success_required",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -165,7 +171,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9c76d3785f45e75952cbebaebe1ac42a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4ae4a5c731133d919ac022813294e229')"
     ]
   }
 }

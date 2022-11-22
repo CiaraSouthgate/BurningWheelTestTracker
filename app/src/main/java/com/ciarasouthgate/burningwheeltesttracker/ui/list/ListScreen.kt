@@ -3,9 +3,9 @@ package com.ciarasouthgate.burningwheeltesttracker.ui.list
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.AppBarWithSearch
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.ListViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <ItemType> ListScreen(
     title: String,
@@ -47,10 +48,11 @@ fun <ItemType> ListScreen(
                 emptyText,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(paddingValues)
                     .padding(top = 20.dp)
                     .alpha(0.75f),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.bodyLarge
             )
         } else {
             content(paddingValues)

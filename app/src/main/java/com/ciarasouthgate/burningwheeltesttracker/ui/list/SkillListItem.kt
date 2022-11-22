@@ -2,9 +2,9 @@ package com.ciarasouthgate.burningwheeltesttracker.ui.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ProvideTextStyle
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,19 +19,19 @@ import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.SwipeToDelete
 import com.ciarasouthgate.burningwheeltesttracker.ui.skill.SkillTestDisplay
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Alegreya
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material2AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.createRandomTestSkill
 
 @Composable
 fun SkillListItem(
     skill: Skill,
     onClick: (Skill) -> Unit,
-    onEdit: (Skill) -> Unit,
+    onEdit: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     SwipeToDelete(
-        onEdit = { onEdit(skill) },
+        onEdit = onEdit,
         onDelete = onDelete
     ) {
         Row(
@@ -86,7 +86,7 @@ fun SkillStatView(
         ) {
             Text(
                 skill.name,
-                style = MaterialTheme.typography.subtitle1,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
             )
         }
@@ -97,7 +97,7 @@ fun SkillStatView(
                 skill.personaSpent,
                 skill.deedsSpent
             ),
-            style = MaterialTheme.typography.subtitle2
+            style = MaterialTheme.typography.titleSmall
         )
     }
 }
@@ -106,7 +106,7 @@ fun SkillStatView(
 @Composable
 fun SkillListItemPreview() {
     val skill = createRandomTestSkill()
-    Material2AppTheme {
+    Material3AppTheme {
         SkillListItem(skill = skill, onClick = {}, onEdit = {}, onDelete = {})
     }
 }

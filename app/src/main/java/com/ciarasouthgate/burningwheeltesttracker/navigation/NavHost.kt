@@ -3,10 +3,10 @@ package com.ciarasouthgate.burningwheeltesttracker.navigation
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -52,7 +52,7 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
             )
         }
         composable(
-            "${SKILLS}/{$CHARACTER_ID}",
+            "$SKILLS/{$CHARACTER_ID}",
             arguments = listOf(
                 navArgument(CHARACTER_ID) {
                     type = NavType.LongType
@@ -75,13 +75,13 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
                     )
                 },
                 onSkillEdit = { skill ->
-                    navController.navigate("${SKILL_EDITOR}/${characterId}/${skill.id}")
+                    navController.navigate("$SKILL_EDITOR/$characterId?$SKILL_ID=${skill.id}")
                 },
                 navigationIcon = { BackButton(navController) }
             )
         }
         composable(
-            "${ROLL}/{$SKILL_ID}",
+            "$ROLL/{$SKILL_ID}",
             arguments = listOf(
                 navArgument(SKILL_ID) {
                     type = NavType.LongType
@@ -93,7 +93,7 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
             RollDetail(skillId)
         }
         composable(
-            "${SKILL_EDITOR}/{$CHARACTER_ID}",
+            "$SKILL_EDITOR/{$CHARACTER_ID}?$SKILL_ID={$SKILL_ID}",
             arguments = listOf(
                 navArgument(CHARACTER_ID) {
                     type = NavType.LongType
@@ -125,4 +125,4 @@ fun BackButton(navController: NavHostController) {
 }
 
 private fun NavHostController.navigateToSkillList(characterId: Long) =
-    navigate("${SKILLS}/${characterId}")
+    navigate("$SKILLS/$characterId")

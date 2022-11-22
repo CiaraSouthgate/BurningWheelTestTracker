@@ -6,19 +6,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.material.MaterialTheme as Material2Theme
 import androidx.compose.material3.MaterialTheme as Material3Theme
-
-@Composable
-fun Material2AppTheme(
-    content: @Composable () -> Unit
-) {
-    Material2Theme(
-        colors = m2LightColors,
-        typography = AppTypography,
-        content = content
-    )
-}
 
 @Composable
 fun Material3AppTheme(

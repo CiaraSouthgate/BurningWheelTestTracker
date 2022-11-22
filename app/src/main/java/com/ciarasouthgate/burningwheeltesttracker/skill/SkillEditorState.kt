@@ -19,12 +19,14 @@ class SkillEditorState(
     initialChallengingTests: Int = 0,
     initialFateSpent: Int = 0,
     initialPersonaSpent: Int = 0,
-    initialDeedsSpent: Int = 0
+    initialDeedsSpent: Int = 0,
+    initialSuccessRequired: Boolean = false
 ) {
     var name by mutableStateOf(initialName)
     var shade by mutableStateOf(initialShade)
     var exponent by mutableStateOf(initialExponent)
     var type by mutableStateOf(initialType)
+    var successRequired by mutableStateOf(initialSuccessRequired)
 
     val tests = mutableStateMapOf(
         TestType.ROUTINE to initialRoutineTests,
@@ -49,7 +51,8 @@ class SkillEditorState(
         challengingTests = tests[TestType.CHALLENGING]!!,
         fateSpent = arthaSpent[ArthaType.FATE]!!,
         personaSpent = arthaSpent[ArthaType.PERSONA]!!,
-        deedsSpent = arthaSpent[ArthaType.DEEDS]!!
+        deedsSpent = arthaSpent[ArthaType.DEEDS]!!,
+        successRequired = successRequired
     )
 }
 
@@ -68,7 +71,8 @@ fun rememberSkillEditorState(
     skill.challengingTests,
     skill.fateSpent,
     skill.personaSpent,
-    skill.deedsSpent
+    skill.deedsSpent,
+    skill.successRequired
 )
 
 @Composable
@@ -83,7 +87,8 @@ fun rememberSkillEditorState(
     challengingTests: Int = 0,
     fateSpent: Int = 0,
     personaSpent: Int = 0,
-    deedsSpent: Int = 0
+    deedsSpent: Int = 0,
+    successRequired: Boolean = false
 ) = remember(
     character,
     name,
@@ -95,7 +100,8 @@ fun rememberSkillEditorState(
     challengingTests,
     fateSpent,
     personaSpent,
-    deedsSpent
+    deedsSpent,
+    successRequired
 ) {
     SkillEditorState(
         character,
@@ -108,6 +114,7 @@ fun rememberSkillEditorState(
         challengingTests,
         fateSpent,
         personaSpent,
-        deedsSpent
+        deedsSpent,
+        successRequired
     )
 }

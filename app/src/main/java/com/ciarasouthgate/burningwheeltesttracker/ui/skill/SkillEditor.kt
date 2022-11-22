@@ -1,11 +1,12 @@
 package com.ciarasouthgate.burningwheeltesttracker.ui.skill
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -16,6 +17,7 @@ import com.ciarasouthgate.burningwheeltesttracker.ui.common.TestTrackerAppBar
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.SkillViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.skillEditorViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SkillEditor(
     characterId: Long,
@@ -32,7 +34,7 @@ fun SkillEditor(
     var isSaveAttempted by remember { mutableStateOf(false) }
 
     character?.let { ch ->
-        val state = rememberSkillEditorState(ch)
+        val state = skill?.let { rememberSkillEditorState(ch, it) } ?: rememberSkillEditorState(ch)
         Scaffold(
             topBar = {
                 TestTrackerAppBar(

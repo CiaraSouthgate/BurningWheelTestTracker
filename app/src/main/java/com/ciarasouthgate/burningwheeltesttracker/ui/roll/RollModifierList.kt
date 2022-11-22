@@ -4,9 +4,9 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Divider
-import androidx.compose.material.Switch
-import androidx.compose.material.Text
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.Counter
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.toggle
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material2AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
 
 @Composable
 fun RollModifierList(
@@ -101,7 +101,7 @@ fun RollModifierListPreview() {
         BooleanRollModifier("Doubled", doubled)
     )
 
-    Material2AppTheme {
+    Material3AppTheme {
         RollModifierList(rollModifiers = modifiers)
     }
 }

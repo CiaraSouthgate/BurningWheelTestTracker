@@ -9,6 +9,7 @@
     <string name="artha_list">Fate: %1$d | Persona: %2$d | Deeds: %3$d</string>
     <string name="artha_spent">Artha Spent</string>
     <string name="attribute">Attribute</string>
+    <string name="attribute_name">Attribute Name</string>
     <string name="back">Back</string>
     <string name="base_obstacle">Base Obstacle</string>
     <string name="black">Black</string>
@@ -19,13 +20,14 @@
     <string name="decrement">Decrement</string>
     <string name="deeds">Deeds</string>
     <string name="delete">Delete</string>
-    <string name="delete_character_title">Delete %1$s?</string>
+    <string name="delete_dialog_title">Delete %1$s?</string>
     <string name="dice_rolled">Dice</string>
     <string name="difficult">Difficult</string>
     <string name="disadvantage">Disadvantage</string>
     <string name="doubled">Doubled</string>
     <string name="edit">Edit</string>
     <string name="edit_character">Edit Character Name</string>
+    <string name="edit_dialog_title">Edit %1$s?</string>
     <string name="expand">Expand</string>
     <string name="exponent">Exponent</string>
     <string name="fate">Fate</string>
@@ -58,6 +60,7 @@
     <string name="type">Type</string>
     <string name="vs">vs</string>
     <string name="white">White</string>
+    <string name="success_required">Tests must be successful?</string>
 
     <plurals name="num_skills">
         <item quantity="one">%d skill</item>

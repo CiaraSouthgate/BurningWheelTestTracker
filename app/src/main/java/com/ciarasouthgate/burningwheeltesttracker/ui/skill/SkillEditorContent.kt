@@ -44,7 +44,11 @@ fun SkillEditorContent(
                 label = {
                     Text(
                         stringResource(
-                            if (state.type == Type.SKILL) R.string.skill_name else R.string.stat_name
+                            when (state.type) {
+                                Type.SKILL -> R.string.skill_name
+                                Type.STAT -> R.string.stat_name
+                                Type.ATTRIBUTE -> R.string.attribute_name
+                            }
                         )
                     )
                 },
@@ -87,7 +91,21 @@ fun SkillEditorContent(
             isActive = { state.type == it },
             onChange = { state.type = it },
             titleRes = R.string.type
-        )
+        ) {
+            if (state.type != Type.SKILL) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(stringResource(R.string.success_required))
+                    Switch(
+                        checked = state.successRequired,
+                        onCheckedChange = { state.successRequired = it }
+                    )
+                }
+            }
+        }
 
         MultiCounterRow(
             R.string.tests_completed,
@@ -111,19 +129,23 @@ private fun <T> SelectorButtonGroup(
     getLabelRes: (T) -> Int,
     isActive: (T) -> Boolean,
     onChange: (T) -> Unit,
-    titleRes: Int? = null
+    titleRes: Int? = null,
+    additionalContent: @Composable ColumnScope.() -> Unit = {}
 ) {
     SkillEditorSection(titleRes = titleRes) {
-        OutlinedButtonGroup(
-            values.map {
-                ButtonData(
-                    isActive(it),
-                    { onChange(it) }
-                ) {
-                    Text(stringResource(getLabelRes(it)))
+        Column {
+            OutlinedButtonGroup(
+                values.map {
+                    ButtonData(
+                        isActive(it),
+                        { onChange(it) }
+                    ) {
+                        Text(stringResource(getLabelRes(it)))
+                    }
                 }
-            }
-        )
+            )
+            additionalContent()
+        }
     }
 }
 

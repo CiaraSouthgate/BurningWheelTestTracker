@@ -3,7 +3,7 @@ package com.ciarasouthgate.burningwheeltesttracker.ui.list
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
+import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp

@@ -2,16 +2,16 @@ package com.ciarasouthgate.burningwheeltesttracker.ui.common
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material2AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
 
 @Composable
 fun TextFieldWithError(
@@ -24,8 +24,8 @@ fun TextFieldWithError(
         error?.let {
             Text(
                 text = error,
-                color = MaterialTheme.colors.error,
-                style = MaterialTheme.typography.caption,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(start = 16.dp)
             )
         }
@@ -38,7 +38,7 @@ fun TextFieldWithErrorPreview(
     @PreviewParameter(ErrorParameterProvider::class) error: String?
 ) {
     var value by remember { mutableStateOf("") }
-    Material2AppTheme {
+    Material3AppTheme {
         TextFieldWithError(error) {
             TextField(value = value, onValueChange = { value = it })
         }

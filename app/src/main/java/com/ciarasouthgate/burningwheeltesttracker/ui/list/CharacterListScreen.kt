@@ -1,9 +1,6 @@
 package com.ciarasouthgate.burningwheeltesttracker.ui.list
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -11,8 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
-import com.ciarasouthgate.burningwheeltesttracker.ui.common.TestTrackerDialog
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material2AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.getCharacterListViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.CharacterListViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.CharacterListViewModelImpl
@@ -73,28 +69,14 @@ fun CharacterListScreen(
     }
     if (showDeleteDialog) {
         activeCharacter?.let { character ->
-            TestTrackerDialog(
+            EditDeleteDialog(
+                entityName = character.name,
                 onDismiss = {
                     activeCharacter = null
                     showDeleteDialog = false
                 },
-                title = stringResource(R.string.delete_character_title, character.name),
-                buttons = {
-                    TextButton(onClick = {
-                        activeCharacter = null
-                        showDeleteDialog = false
-                    }) {
-                        Text(stringResource(R.string.cancel))
-                    }
-                    Button(onClick = {
-                        activeCharacter?.let { viewModel.deleteListItem(it) }
-                        activeCharacter = null
-                        showDeleteDialog = false
-                    }) {
-                        Text(stringResource(R.string.delete))
-                    }
-                },
-                content = {}
+                onConfirmAction = { viewModel.deleteListItem(character) },
+                state = EditDeleteDialogState.DELETE
             )
         } ?: throw IllegalStateException("Active character must be specified for delete dialog")
     }
@@ -103,7 +85,7 @@ fun CharacterListScreen(
 @Preview
 @Composable
 fun PreviewCharacterListScreen() {
-    Material2AppTheme {
+    Material3AppTheme {
         CharacterListScreen(
             onCharacterAdded = {},
             onCharacterClicked = {},

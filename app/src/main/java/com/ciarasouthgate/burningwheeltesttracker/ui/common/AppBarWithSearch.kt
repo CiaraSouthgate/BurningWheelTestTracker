@@ -4,11 +4,10 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -17,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ciarasouthgate.burningwheeltesttracker.R
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material2AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
 
 @Composable
 fun AppBarWithSearch(
@@ -108,7 +107,7 @@ private fun SearchAppBar(
                 placeholder = { Text(stringResource(R.string.search)) },
                 singleLine = true,
                 colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent,
+                    containerColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
                 ),
@@ -126,7 +125,7 @@ private fun SearchAppBar(
 @Preview
 @Composable
 fun SearchBarPreview() {
-    Material2AppTheme {
+    Material3AppTheme {
         AppBarWithSearch("Test", {})
     }
 }

@@ -8,7 +8,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ciarasouthgate.burningwheeltesttracker.MainActivity
 import com.ciarasouthgate.burningwheeltesttracker.data.AppRepository
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
-import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -25,6 +24,7 @@ class SkillEditorViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
+            skillId?.let { repository.getSkill(it) }
             _character.value = repository.getCharacter(characterId)
         }
     }

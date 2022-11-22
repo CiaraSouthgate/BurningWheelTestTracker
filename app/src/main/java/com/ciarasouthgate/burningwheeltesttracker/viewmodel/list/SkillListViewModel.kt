@@ -39,7 +39,7 @@ class SkillListViewModelImpl @AssistedInject constructor(
     }
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Main) {
             _character.value = repository.getCharacter(characterId)
         }
     }

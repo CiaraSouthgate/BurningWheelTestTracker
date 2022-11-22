@@ -1,13 +1,13 @@
 package com.ciarasouthgate.burningwheeltesttracker.ui.roll
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +21,7 @@ import com.ciarasouthgate.burningwheeltesttracker.common.MAX_PERSONA
 import com.ciarasouthgate.burningwheeltesttracker.common.RollType
 import com.ciarasouthgate.burningwheeltesttracker.roll.RollState
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Bitter
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material2AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.createTestSkill
 
 @Composable
@@ -39,7 +39,7 @@ fun RollDetailContent(
     ) {
         Text(
             stringResource(R.string.testing_header, rollState.skillName),
-            style = MaterialTheme.typography.h4
+            style = MaterialTheme.typography.headlineMedium
         )
         Row(
             modifier = Modifier.padding(10.dp),
@@ -62,7 +62,7 @@ fun RollDetailContent(
             if (showObstacle) {
                 Text(
                     stringResource(R.string.vs),
-                    style = MaterialTheme.typography.h6
+                    style = MaterialTheme.typography.titleLarge
                 )
                 DieDisplay(
                     value = rollState.obstacle,
@@ -151,7 +151,7 @@ private fun DieDisplay(
         TextButton(onClick = onExpandToggled) {
             Text(
                 label,
-                style = MaterialTheme.typography.button.copy(
+                style = MaterialTheme.typography.labelLarge.copy(
                     fontFeatureSettings = "c2sc, smcp"
                 )
             )
@@ -169,7 +169,7 @@ private fun ArthaDisplay(
 ) {
     Text(
         text = stringResource(R.string.artha),
-        style = MaterialTheme.typography.h5
+        style = MaterialTheme.typography.headlineSmall
     )
 
     RollModifierList(rollModifiers)
@@ -179,7 +179,7 @@ private fun ArthaDisplay(
 @Composable
 private fun RollDetailPreview() {
     val skill = createTestSkill(skillName = "Stealthy")
-    Material2AppTheme {
+    Material3AppTheme {
         RollDetailContent(
             RollState(skill),
             RollType.STANDARD

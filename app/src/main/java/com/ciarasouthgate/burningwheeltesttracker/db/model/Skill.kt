@@ -32,7 +32,9 @@ class Skill(
     @ColumnInfo(name = "aristeia_available")
     var aristeiaAvailable: Boolean = false,
     @ColumnInfo(name = "aristeia_spent")
-    var aristeiaUsed: Boolean = false
+    var aristeiaUsed: Boolean = false,
+    @ColumnInfo(name = "success_required")
+    val successRequired: Boolean = false
 ) {
     var exponent = exponent
         set(value) {

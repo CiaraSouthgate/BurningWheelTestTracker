@@ -1,7 +1,7 @@
 package com.ciarasouthgate.burningwheeltesttracker.ui.list
 
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.TestTrackerDialog
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material2AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
 
 @Composable
 fun AddCharacterDialog(
@@ -38,7 +38,7 @@ fun AddCharacterDialog(
                     isError = false
                 },
                 colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent
+                    containerColor = Color.Transparent
                 ),
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions(
@@ -50,15 +50,15 @@ fun AddCharacterDialog(
             )
             Text(
                 stringResource(R.string.name_exists),
-                style = MaterialTheme.typography.caption,
-                color = if (isError) MaterialTheme.colors.error else Color.Transparent
+                style = MaterialTheme.typography.bodySmall,
+                color = if (isError) MaterialTheme.colorScheme.error else Color.Transparent
             )
         },
         buttons = {
             TextButton(onClick = onDismiss) {
                 Text(
                     stringResource(R.string.cancel).uppercase(),
-                    style = MaterialTheme.typography.button
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
             Button(
@@ -72,7 +72,7 @@ fun AddCharacterDialog(
             ) {
                 Text(
                     stringResource(if (isEditing) R.string.save else R.string.add).uppercase(),
-                    style = MaterialTheme.typography.button
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
         }
@@ -95,7 +95,7 @@ fun AddCharacterDialog(
 @Preview
 @Composable
 fun AddCharacterDialogPreview() {
-    Material2AppTheme {
+    Material3AppTheme {
         AddCharacterDialog(
             onCharacterSaved = {},
             onAdd = { null },
