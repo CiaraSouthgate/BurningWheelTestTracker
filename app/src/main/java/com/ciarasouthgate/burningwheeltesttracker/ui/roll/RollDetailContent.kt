@@ -21,7 +21,7 @@ import com.ciarasouthgate.burningwheeltesttracker.common.MAX_PERSONA
 import com.ciarasouthgate.burningwheeltesttracker.common.RollType
 import com.ciarasouthgate.burningwheeltesttracker.roll.RollState
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Bitter
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material2AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.createTestSkill
 
 @Composable
@@ -179,7 +179,7 @@ private fun ArthaDisplay(
 @Composable
 private fun RollDetailPreview() {
     val skill = createTestSkill(skillName = "Stealthy")
-    AppTheme {
+    Material2AppTheme {
         RollDetailContent(
             RollState(skill),
             RollType.STANDARD

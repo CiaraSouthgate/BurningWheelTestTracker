@@ -1,26 +1,29 @@
 package com.ciarasouthgate.burningwheeltesttracker.common
 
-enum class Shade(val prettyName: String) {
-    BLACK("Black"),
-    GREY("Grey"),
-    WHITE("White")
+import com.ciarasouthgate.burningwheeltesttracker.R
+
+enum class Shade(val nameRes: Int) {
+    BLACK(R.string.black),
+    GREY(R.string.grey),
+    WHITE(R.string.white)
 }
 
-enum class Type(val prettyName: String) {
-    SKILL("Skill"),
-    STAT("Stat")
+enum class Type(val nameRes: Int) {
+    SKILL(R.string.skill),
+    STAT(R.string.stat),
+    ATTRIBUTE(R.string.attribute)
 }
 
-enum class TestType(val prettyName: String) {
-    ROUTINE("Routine"),
-    DIFFICULT("Difficult"),
-    CHALLENGING("Challenging")
+enum class TestType(val nameRes: Int) {
+    ROUTINE(R.string.routine),
+    DIFFICULT(R.string.difficult),
+    CHALLENGING(R.string.challenging)
 }
 
-enum class ArthaType(val prettyName: String) {
-    FATE("Fate"),
-    PERSONA("Persona"),
-    DEEDS("Deeds")
+enum class ArthaType(val nameRes: Int) {
+    FATE(R.string.fate),
+    PERSONA(R.string.persona),
+    DEEDS(R.string.deeds)
 }
 
 enum class RollType {

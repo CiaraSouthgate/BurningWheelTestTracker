@@ -19,7 +19,7 @@ import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.SwipeToDelete
 import com.ciarasouthgate.burningwheeltesttracker.ui.skill.SkillTestDisplay
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Alegreya
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material2AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.createRandomTestSkill
 
 @Composable
@@ -47,9 +47,16 @@ fun SkillListItem(
                 skill,
                 modifier = Modifier.weight(1f)
             )
-            ProvideTextStyle(value = MaterialTheme.typography.h6.copy(fontFamily = Alegreya)) {
+            ProvideTextStyle(
+                TextStyle(
+                    fontFamily = Alegreya,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 23.sp,
+                    letterSpacing = 0.15.sp
+                )
+            ) {
                 Text(
-                    skill.shade.prettyName[0].toString(),
+                    stringResource(skill.shade.nameRes)[0].toString(),
                     fontWeight = FontWeight.Bold
                 )
                 Text(skill.exponent.toString())
@@ -99,7 +106,7 @@ fun SkillStatView(
 @Composable
 fun SkillListItemPreview() {
     val skill = createRandomTestSkill()
-    AppTheme {
+    Material2AppTheme {
         SkillListItem(skill = skill, onClick = {}, onEdit = {}, onDelete = {})
     }
 }

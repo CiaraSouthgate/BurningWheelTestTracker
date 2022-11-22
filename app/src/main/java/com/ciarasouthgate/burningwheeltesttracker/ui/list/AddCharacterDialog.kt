@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.TestTrackerDialog
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material2AppTheme
 
 @Composable
 fun AddCharacterDialog(
@@ -95,7 +95,7 @@ fun AddCharacterDialog(
 @Preview
 @Composable
 fun AddCharacterDialogPreview() {
-    AppTheme {
+    Material2AppTheme {
         AddCharacterDialog(
             onCharacterSaved = {},
             onAdd = { null },

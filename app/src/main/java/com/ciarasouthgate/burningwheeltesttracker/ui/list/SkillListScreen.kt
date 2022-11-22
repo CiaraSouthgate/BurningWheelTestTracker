@@ -9,7 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material2AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.getSkillListViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.SkillListViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.skillListViewModel
@@ -49,7 +49,7 @@ fun SkillListScreen(
 @Preview
 @Composable
 fun SkillListScreenPreview() {
-    AppTheme {
+    Material2AppTheme {
         SkillListScreen(
             characterId = 1,
             onAddClicked = {},

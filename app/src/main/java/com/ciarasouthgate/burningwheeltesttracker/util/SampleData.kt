@@ -90,7 +90,7 @@ fun getCharacterListViewModel(
 ) = object : CharacterListViewModel {
     override suspend fun addCharacter(characterName: String): Long? = null
     override suspend fun editCharacter(character: Character): Boolean = false
-    override fun deleteCharacter(character: Character) {}
+    override fun deleteListItem(item: Character) {}
 
     override var items: Flow<List<Character>> = flowOf(characterList)
     override fun getAll(): Flow<List<Character>> = flowOf(characterList)
@@ -119,5 +119,7 @@ fun getSkillListViewModel(
     override fun onSearchTextChanged(text: String) {
         filterList(text)
     }
+
+    override fun deleteListItem(item: Skill) {}
 
 }

@@ -23,7 +23,7 @@ import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
 import com.ciarasouthgate.burningwheeltesttracker.roll.rememberRollState
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.SkillViewModel
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material2AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.createTestSkill
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.rollDetailViewModel
 
@@ -94,7 +94,7 @@ fun RollDetail(
 fun RollScreenPreview() {
     val characterName = "Test Character"
     val skillName = "Test Skill"
-    AppTheme {
+    Material2AppTheme {
         RollDetail(
             1,
             navigationIcon = {

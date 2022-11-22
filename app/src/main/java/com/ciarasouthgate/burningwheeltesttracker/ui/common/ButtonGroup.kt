@@ -3,12 +3,14 @@ package com.ciarasouthgate.burningwheeltesttracker.ui.common
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
+
+private const val CORNER_RADIUS = 50
 
 @Composable
 fun OutlinedButtonGroup(
@@ -20,30 +22,31 @@ fun OutlinedButtonGroup(
         horizontalArrangement = Arrangement.spacedBy((-1).dp)
     ) {
         buttons.forEachIndexed { index, button ->
-            val startShape = if (index == 0) 4.dp else 0.dp
-            val endShape = if (index == buttons.size - 1) 4.dp else 0.dp
-            val textColor = MaterialTheme.colors.onSurface.copy(
-                if (button.isActive) ContentAlpha.high else ContentAlpha.medium
-            )
+            val startShape = if (index == 0) CORNER_RADIUS else 0
+            val endShape = if (index == buttons.size - 1) CORNER_RADIUS else 0
+            val textColor = MaterialTheme.colorScheme.onSurface
             val backgroundColor = if (button.isActive) {
-                MaterialTheme.colors.primary.copy(alpha = 0.25f)
+                MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)
             } else {
-                MaterialTheme.colors.surface
+                MaterialTheme.colorScheme.surface
             }
-            OutlinedButton(
-                onClick = button.onClick,
-                shape = RoundedCornerShape(
-                    topStart = startShape,
-                    bottomStart = startShape,
-                    topEnd = endShape,
-                    bottomEnd = endShape
-                ),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = textColor,
-                    backgroundColor = backgroundColor
-                )
-            ) {
-                button.contents()
+            ProvideTextStyle(MaterialTheme.typography.labelLarge) {
+                OutlinedButton(
+                    onClick = button.onClick,
+                    shape = RoundedCornerShape(
+                        topStartPercent = startShape,
+                        bottomStartPercent = startShape,
+                        topEndPercent = endShape,
+                        bottomEndPercent = endShape
+                    ),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = textColor,
+                        containerColor = backgroundColor
+                    ),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    button.contents()
+                }
             }
         }
     }
@@ -59,7 +62,7 @@ data class ButtonData(
 @Composable
 private fun ButtonGroupPreview() {
     var activeButton by remember { mutableStateOf(0) }
-    AppTheme {
+    Material3AppTheme {
         OutlinedButtonGroup(
             List(3) { i ->
                 ButtonData(

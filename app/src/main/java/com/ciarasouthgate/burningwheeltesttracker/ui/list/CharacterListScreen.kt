@@ -12,7 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.TestTrackerDialog
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material2AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.getCharacterListViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.CharacterListViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.CharacterListViewModelImpl
@@ -103,7 +103,7 @@ fun CharacterListScreen(
 @Preview
 @Composable
 fun PreviewCharacterListScreen() {
-    AppTheme {
+    Material2AppTheme {
         CharacterListScreen(
             onCharacterAdded = {},
             onCharacterClicked = {},
