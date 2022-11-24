@@ -8,7 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.getCharacterListViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.CharacterListViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.CharacterListViewModelImpl
@@ -85,7 +85,7 @@ fun CharacterListScreen(
 @Preview
 @Composable
 fun PreviewCharacterListScreen() {
-    Material3AppTheme {
+    AppTheme {
         CharacterListScreen(
             onCharacterAdded = {},
             onCharacterClicked = {},

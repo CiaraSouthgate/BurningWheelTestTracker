@@ -8,7 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 
 private const val CORNER_RADIUS = 50
 
@@ -62,7 +62,7 @@ data class ButtonData(
 @Composable
 private fun ButtonGroupPreview() {
     var activeButton by remember { mutableStateOf(0) }
-    Material3AppTheme {
+    AppTheme {
         OutlinedButtonGroup(
             List(3) { i ->
                 ButtonData(

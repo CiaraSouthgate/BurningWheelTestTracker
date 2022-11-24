@@ -21,7 +21,8 @@ import com.ciarasouthgate.burningwheeltesttracker.common.RollType
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
 import com.ciarasouthgate.burningwheeltesttracker.roll.rememberRollState
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.common.TestTrackerDialog
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.createTestSkill
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.SkillViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.rollDetailViewModel
@@ -35,7 +36,8 @@ fun RollDetail(
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
     val rollType by derivedStateOf { RollType.values()[selectedTabIndex] }
-    var onSaveAttempted by remember { mutableStateOf(false) }
+    var saveAttempted by remember { mutableStateOf(false) }
+    var showSuccessDialog by remember { mutableStateOf(false) }
 
     val skill = viewModel.skill.observeAsState()
     val character = viewModel.character.observeAsState()
@@ -48,7 +50,13 @@ fun RollDetail(
                     title = { Text(character.value?.name.orEmpty()) },
                     actions = {
                         IconButton(
-                            onClick = { onSaveAttempted = true }
+                            onClick = {
+                                if (skill.value!!.successRequired) {
+                                    showSuccessDialog = true
+                                } else {
+                                    saveAttempted = true
+                                }
+                            }
                         ) {
                             Icon(Icons.Default.Save, stringResource(R.string.save))
                         }
@@ -59,7 +67,7 @@ fun RollDetail(
                 TabRow(selectedTabIndex = selectedTabIndex) {
                     RollType.values().forEachIndexed { index, rollType ->
                         Tab(
-                            text = { Text(rollType.name, fontSize = 12.sp) },
+                            text = { Text(stringResource(rollType.nameRes), fontSize = 12.sp) },
                             selected = selectedTabIndex == index,
                             onClick = { selectedTabIndex = index }
                         )
@@ -81,9 +89,33 @@ fun RollDetail(
             }
         }
 
-        if (onSaveAttempted) {
+        if (showSuccessDialog) {
+            TestTrackerDialog(
+                onDismiss = { showSuccessDialog = false },
+                title = stringResource(R.string.test_success_title),
+                content = {
+                    Text(stringResource(R.string.test_success_message, skill.value!!.name))
+                }
+            ) {
+                var successful by remember { mutableStateOf<Boolean?>(null) }
+                OutlinedButton(onClick = { successful = false }) {
+                    Text(stringResource(R.string.no))
+                }
+                OutlinedButton(onClick = { successful = true }) {
+                    Text(stringResource(R.string.yes))
+                }
+                successful?.let {
+                    LaunchedEffect(Unit) {
+                        viewModel.editSkill(rollState.getUpdatedSkill(it))
+                    }
+                    showSuccessDialog = false
+                }
+            }
+        }
+
+        if (saveAttempted) {
             LaunchedEffect(Unit) {
-                viewModel.editSkill(rollState.updateSkill())
+                viewModel.editSkill(rollState.getUpdatedSkill())
             }
         }
     }
@@ -94,7 +126,7 @@ fun RollDetail(
 fun RollScreenPreview() {
     val characterName = "Test Character"
     val skillName = "Test Skill"
-    Material3AppTheme {
+    AppTheme {
         RollDetail(
             1,
             navigationIcon = {

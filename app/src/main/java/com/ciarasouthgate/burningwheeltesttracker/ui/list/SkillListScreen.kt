@@ -6,8 +6,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ciarasouthgate.burningwheeltesttracker.R
+import com.ciarasouthgate.burningwheeltesttracker.common.Type
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.getSkillListViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.SkillListViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.skillListViewModel
@@ -21,9 +22,16 @@ fun SkillListScreen(
     navigationIcon: @Composable () -> Unit = {},
     viewModel: SkillListViewModel = skillListViewModel(characterId)
 ) {
-    val skills by viewModel.items.collectAsState(emptyList())
+    val allSkills by viewModel.items.collectAsState(emptyList())
     var editDeleteDialogState by remember { mutableStateOf<EditDeleteDialogState?>(null) }
     var activeSkill by remember { mutableStateOf<Skill?>(null) }
+
+    val groupedList by derivedStateOf { allSkills.groupBy { it.type } }
+    val labelMap = mapOf(
+        Type.SKILL to stringResource(R.string.skills),
+        Type.STAT to stringResource(R.string.stats),
+        Type.ATTRIBUTE to stringResource(R.string.attributes)
+    )
 
     ListScreen(
         title = viewModel.characterName.value.orEmpty(),
@@ -32,10 +40,11 @@ fun SkillListScreen(
         emptyText = stringResource(R.string.no_skills),
         navigationIcon = navigationIcon
     ) { paddingValues ->
-        ColumnListWithDividers(
+        ListSectionWithHeader(
             modifier = Modifier.padding(paddingValues),
-            items = skills,
-            key = { it.name }
+            grouped = groupedList,
+            key = { it.id },
+            labelMap = labelMap
         ) {
             SkillListItem(
                 it,
@@ -75,7 +84,7 @@ fun SkillListScreen(
 @Preview
 @Composable
 fun SkillListScreenPreview() {
-    Material3AppTheme {
+    AppTheme {
         SkillListScreen(
             characterId = 1,
             onAddClicked = {},

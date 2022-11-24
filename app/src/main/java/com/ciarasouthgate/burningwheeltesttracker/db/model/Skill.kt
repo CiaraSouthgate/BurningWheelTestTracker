@@ -206,7 +206,7 @@ class Skill(
 
     private fun getRequiredTests(testType: TestType): Int {
         return when (testType) {
-            TestType.ROUTINE -> if (exponent < 5 && this.type == Type.SKILL) exponent else 0
+            TestType.ROUTINE -> if (exponent < 5 && this.type != Type.STAT) exponent else 0
             TestType.DIFFICULT -> ceil(exponent / 2.0).toInt()
             TestType.CHALLENGING -> when (exponent) {
                 6, 7 -> 2

@@ -13,9 +13,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -28,7 +31,9 @@ import com.ciarasouthgate.burningwheeltesttracker.common.TestType
 import com.ciarasouthgate.burningwheeltesttracker.common.Type
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Alegreya
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
+
+const val SKILL_DISPLAY_ICON_TAG = "skillDisplayIcon"
 
 @Composable
 fun SkillTestDisplay(
@@ -36,7 +41,7 @@ fun SkillTestDisplay(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        if (skill.type == Type.SKILL) {
+        if (skill.type != Type.STAT) {
             SkillTestRow(TestType.ROUTINE, skill)
         }
         SkillTestRow(TestType.DIFFICULT, skill)
@@ -45,7 +50,7 @@ fun SkillTestDisplay(
 }
 
 @Composable
-fun SkillTestRow(type: TestType, skill: Skill) {
+private fun SkillTestRow(type: TestType, skill: Skill) {
     val iconSize = 15.dp
     val numComplete = skill.getCompletedTestsForType(type)
     val numNeeded = skill.getRequiredTestsForType(type)
@@ -56,7 +61,10 @@ fun SkillTestRow(type: TestType, skill: Skill) {
         letterSpacing = 0.4.sp
     )
 
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.semantics { testTag = type.name }
+    ) {
         Text(
             stringResource(type.nameRes)[0].toString(),
             style = textStyle,
@@ -66,22 +74,29 @@ fun SkillTestRow(type: TestType, skill: Skill) {
             textAlign = TextAlign.Center
         )
         for (i in 1..MAX_TESTS_NEEDED) {
-            val icon = if (i > numNeeded) {
-                Icons.Default.Circle
+            val icon: ImageVector?
+            val contentDescriptionRes: Int
+            if (i > numNeeded) {
+                icon = Icons.Default.Circle
+                contentDescriptionRes = R.string.unneeded_test
             } else if (i <= numComplete) {
-                Icons.Default.TaskAlt
+                icon = Icons.Default.TaskAlt
+                contentDescriptionRes = R.string.completed_test
             } else if (type != TestType.ROUTINE && skill.optionalTestTypes) {
-                null
+                icon = null
+                contentDescriptionRes = R.string.optional_test
             } else {
-                Icons.Default.RadioButtonUnchecked
+                icon = Icons.Default.RadioButtonUnchecked
+                contentDescriptionRes = R.string.required_test
             }
             val painter = icon?.let {
                 rememberVectorPainter(it)
             } ?: painterResource(R.drawable.ic_half_filled_circle)
             Icon(
                 painter,
-                null,
+                stringResource(contentDescriptionRes),
                 modifier = Modifier.size(iconSize)
+                    .semantics { testTag = SKILL_DISPLAY_ICON_TAG }
             )
         }
     }
@@ -90,7 +105,7 @@ fun SkillTestRow(type: TestType, skill: Skill) {
 @Composable
 @Preview
 fun SkillTestDisplayPreview() {
-    Material3AppTheme {
+    AppTheme {
         SkillTestDisplay(
             Skill(
                 name = "Test Skill",

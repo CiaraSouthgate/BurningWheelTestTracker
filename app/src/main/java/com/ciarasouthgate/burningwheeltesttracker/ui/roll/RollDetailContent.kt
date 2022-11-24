@@ -1,28 +1,28 @@
 package com.ciarasouthgate.burningwheeltesttracker.ui.roll
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.common.MAX_PERSONA
 import com.ciarasouthgate.burningwheeltesttracker.common.RollType
 import com.ciarasouthgate.burningwheeltesttracker.roll.RollState
+import com.ciarasouthgate.burningwheeltesttracker.ui.common.FormCounter
+import com.ciarasouthgate.burningwheeltesttracker.ui.common.FormSection
+import com.ciarasouthgate.burningwheeltesttracker.ui.list.ListSectionWithHeader
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Bitter
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.createTestSkill
+import com.ciarasouthgate.burningwheeltesttracker.util.decrement
+import com.ciarasouthgate.burningwheeltesttracker.util.increment
 
 @Composable
 fun RollDetailContent(
@@ -30,156 +30,200 @@ fun RollDetailContent(
     rollType: RollType,
     modifier: Modifier = Modifier
 ) {
-    var showDiceModifierDialog by remember { mutableStateOf(false) }
-    var showObstacleModifierDialog by remember { mutableStateOf(false) }
-
     Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = 10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
-        Text(
-            stringResource(R.string.testing_header, rollState.skillName),
-            style = MaterialTheme.typography.headlineMedium
-        )
         Row(
-            modifier = Modifier.padding(10.dp),
-            horizontalArrangement = Arrangement.spacedBy(15.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(25.dp)
         ) {
-            val showObstacle = rollType != RollType.GRADUATED
-            val displayModifier = Modifier.widthIn(40.dp)
-            DieDisplay(
+            NumberDisplay(
                 value = rollState.diceRolled,
-                label = stringResource(R.string.dice_rolled),
-                modifier = displayModifier,
-                expanded = showDiceModifierDialog,
-                onExpandToggled = {
-                    showDiceModifierDialog = !showDiceModifierDialog
-                    if (showDiceModifierDialog) showObstacleModifierDialog = false
-                }
+                label = stringResource(R.string.dice_rolled)
             )
-
-            if (showObstacle) {
+            if (rollType != RollType.GRADUATED) {
                 Text(
                     stringResource(R.string.vs),
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.headlineMedium
                 )
-                DieDisplay(
+                NumberDisplay(
                     value = rollState.obstacle,
-                    label = stringResource(
-                        if (rollType == RollType.STANDARD) R.string.obstacle else R.string.opponent
-                    ),
-                    modifier = displayModifier,
-                    expanded = showObstacleModifierDialog,
-                    onExpandToggled = {
-                        showObstacleModifierDialog = !showObstacleModifierDialog
-                        if (showObstacleModifierDialog) showDiceModifierDialog = false
-                    }
+                    label = stringResource(R.string.obstacle)
                 )
             }
         }
-
-        val baseObModifier =
-            IntRollModifier(stringResource(R.string.base_obstacle), rollState.baseObstacle)
-        val obDoubledModifier =
-            BooleanRollModifier(stringResource(R.string.doubled), rollState.obstacleDoubled)
-        val personaModifier = IntRollModifier(
-            stringResource(R.string.persona),
-            rollState.persona,
-            maxValue = MAX_PERSONA
-        )
-        val deedsModifier = BooleanRollModifier(stringResource(R.string.deeds), rollState.deeds)
-
-        CollapsibleRollModifierList(
-            rollModifiers = listOf(
-                IntRollModifier(stringResource(R.string.forks), rollState.forks),
-                IntRollModifier(stringResource(R.string.advantage), rollState.advantageDice),
-                IntRollModifier(stringResource(R.string.help), rollState.helpingDice),
-                personaModifier,
-                deedsModifier
-            ),
-            expanded = showDiceModifierDialog,
-            modifier = Modifier.padding(bottom = 15.dp)
-        )
-
-        val obModifiers = when (rollType) {
-            RollType.STANDARD -> listOf(
-                baseObModifier,
-                IntRollModifier(stringResource(R.string.disadvantage), rollState.disadvantage),
-                IntRollModifier(stringResource(R.string.other), rollState.otherObstacle),
-                obDoubledModifier
-            )
-            RollType.VERSUS -> listOf(baseObModifier, obDoubledModifier)
-            RollType.GRADUATED -> emptyList()
+        
+        FormSection(
+            titleRes = R.string.artha,
+            modifier = Modifier.padding(horizontal = 10.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                listOf(
+                    IntRollModifier(
+                        name = stringResource(R.string.fate),
+                        number = rollState.fate
+                    ),
+                    IntRollModifier(
+                        name = stringResource(R.string.persona),
+                        number = rollState.persona,
+                        maxValue = MAX_PERSONA
+                    ),
+                    IntRollModifier(
+                        name = stringResource(R.string.deeds),
+                        number = rollState.deeds,
+                        maxValue = 1
+                    )
+                ).forEach {
+                    RollCounter(
+                        rollModifier = it,
+                        showLabel = true,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
         }
-
-        CollapsibleRollModifierList(
-            rollModifiers = obModifiers,
-            expanded = showObstacleModifierDialog,
-            modifier = Modifier.padding(bottom = 15.dp)
-        )
-
-        ArthaDisplay(
-            rollModifiers = listOf(
-                IntRollModifier(stringResource(R.string.fate), rollState.fate),
-                personaModifier,
-                deedsModifier
+        
+        val modifiers = mapOf(
+            stringResource(R.string.additional_dice) to listOf(
+                IntRollModifier(
+                    name = stringResource(R.string.help),
+                    number = rollState.helpingDice
+                ),
+                IntRollModifier(
+                    name = stringResource(R.string.advantage),
+                    number = rollState.advantageDice
+                ),
+                IntRollModifier(
+                    name = stringResource(R.string.forks),
+                    number = rollState.forks
+                )
+            ),
+            "Obstacle Modifiers" to listOf(
+                IntRollModifier(
+                    name = stringResource(R.string.base_obstacle),
+                    number = rollState.baseObstacle
+                ),
+                IntRollModifier(
+                    name = stringResource(R.string.disadvantage),
+                    number = rollState.disadvantage
+                ),
+                IntRollModifier(
+                    name = stringResource(R.string.other),
+                    number = rollState.otherObstacle
+                ),
+                BooleanRollModifier(
+                    name = stringResource(R.string.doubled),
+                    value = rollState.obstacleDoubled
+                )
             )
         )
+        
+        ListSectionWithHeader(
+            grouped = modifiers, 
+            key = { it.name }
+        ) {
+            ModifierRow(rollModifier = it)
+        }
     }
 }
 
 @Composable
-private fun DieDisplay(
+private fun ModifierRow(
+    rollModifier: RollModifier,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .padding(horizontal = 10.dp)
+            .heightIn(45.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            rollModifier.name,
+            modifier = Modifier.weight(2f)
+        )
+        when (rollModifier) {
+            is IntRollModifier -> {
+                RollCounter(
+                    rollModifier = rollModifier,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            is BooleanRollModifier -> {
+                Switch(
+                    checked = rollModifier.value.value,
+                    onCheckedChange = { rollModifier.onToggle(it) },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun RollCounter(
+    rollModifier: IntRollModifier,
+    modifier: Modifier = Modifier,
+    showLabel: Boolean = false
+) {
+    val number = rollModifier.number
+    FormCounter(
+        modifier = modifier,
+        label = if (showLabel) rollModifier.name else null,
+        value = number.value,
+        labelColor = MaterialTheme.colorScheme.onSurface,
+        iconColor = MaterialTheme.colorScheme.onSurface,
+        onIncrement = { if (number.value < rollModifier.maxValue) number.increment() },
+        onDecrement = { if (number.value > rollModifier.minValue) number.decrement() }
+    )
+}
+
+@Composable
+private fun NumberDisplay(
     value: Int,
     label: String,
-    expanded: Boolean,
-    onExpandToggled: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Surface(
+            color = MaterialTheme.colorScheme.primaryContainer,
+            shape = MaterialTheme.shapes.large,
+            shadowElevation = 2.dp
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.size(100.dp)
+            ) {
+                Text(
+                    value.toString(),
+                    style = MaterialTheme.typography.displayMedium.copy(fontFamily = Bitter)
+                )
+            }
+        }
         Text(
-            value.toString(),
-            style = TextStyle(
-                fontFamily = Bitter,
-                fontSize = 60.sp,
+            label,
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontFeatureSettings = "smcp"
             )
         )
-        TextButton(onClick = onExpandToggled) {
-            Text(
-                label,
-                style = MaterialTheme.typography.labelLarge.copy(
-                    fontFeatureSettings = "c2sc, smcp"
-                )
-            )
-            Icon(
-                if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                null
-            )
-        }
     }
-}
-
-@Composable
-private fun ArthaDisplay(
-    rollModifiers: List<RollModifier>
-) {
-    Text(
-        text = stringResource(R.string.artha),
-        style = MaterialTheme.typography.headlineSmall
-    )
-
-    RollModifierList(rollModifiers)
 }
 
 @Preview(widthDp = 340)
 @Composable
 private fun RollDetailPreview() {
     val skill = createTestSkill(skillName = "Stealthy")
-    Material3AppTheme {
+    AppTheme {
         RollDetailContent(
             RollState(skill),
             RollType.STANDARD

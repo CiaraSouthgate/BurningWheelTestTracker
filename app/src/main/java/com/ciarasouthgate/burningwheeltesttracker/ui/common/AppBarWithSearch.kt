@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ciarasouthgate.burningwheeltesttracker.R
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 
 @Composable
 fun AppBarWithSearch(
@@ -125,7 +125,7 @@ private fun SearchAppBar(
 @Preview
 @Composable
 fun SearchBarPreview() {
-    Material3AppTheme {
+    AppTheme {
         AppBarWithSearch("Test", {})
     }
 }

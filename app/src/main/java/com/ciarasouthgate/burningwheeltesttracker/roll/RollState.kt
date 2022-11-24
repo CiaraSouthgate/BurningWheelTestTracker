@@ -15,7 +15,7 @@ class RollState(
     initialObstacleDoubled: Boolean = false,
     initialPersona: Int = 0,
     initialFate: Int = 0,
-    initialDeeds: Boolean = false
+    initialDeeds: Int = 0
 ) {
     val helpingDice = mutableStateOf(initialHelpingDice)
     val advantageDice = mutableStateOf(initialAdvantageDice)
@@ -32,7 +32,7 @@ class RollState(
     val deeds = mutableStateOf(initialDeeds)
 
     val diceRolled by derivedStateOf {
-        (skill.exponent * if (deeds.value) 2 else 1) +
+        (skill.exponent * if (deeds.value > 0) 2 else 1) +
                 forks.value + helpingDice.value + advantageDice.value + persona.value
     }
 
@@ -43,14 +43,16 @@ class RollState(
 
     val skillName = skill.name
 
-    fun updateSkill(): Skill {
-        val diceValue = diceRolled - persona.value
-        val testType = getTestType(diceValue, obstacle)
-        skill.addTestAndCheckUpgrade(testType)
+    fun getUpdatedSkill(ignoreTest: Boolean = false): Skill {
+        if (!ignoreTest) {
+            val diceValue = diceRolled - persona.value
+            val testType = getTestType(diceValue, obstacle)
+            skill.addTestAndCheckUpgrade(testType)
+        }
         skill.spendArthaAndCheckAdvancement(
             fate.value,
             persona.value,
-            deeds.value
+            deeds.value > 0
         )
         return skill
     }
@@ -74,7 +76,7 @@ fun rememberRollState(
     obstacleDoubled: Boolean = false,
     persona: Int = 0,
     fate: Int = 0,
-    deeds: Boolean = false
+    deeds: Int = 0
 ) = remember(
     skill,
     helpingDice,

@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.MaterialTheme as Material3Theme
 
 @Composable
-fun Material3AppTheme(
+fun AppTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable() () -> Unit
 ) {

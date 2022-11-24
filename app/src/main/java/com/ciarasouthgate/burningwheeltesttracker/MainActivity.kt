@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.ciarasouthgate.burningwheeltesttracker.navigation.TrackerNavHost
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.RollDetailViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.SkillEditorViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.SkillListViewModelImpl
@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            Material3AppTheme {
+            AppTheme {
                 TrackerNavHost()
             }
         }

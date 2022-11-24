@@ -19,7 +19,7 @@ import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.SwipeToDelete
 import com.ciarasouthgate.burningwheeltesttracker.ui.skill.SkillTestDisplay
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Alegreya
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.createRandomTestSkill
 
 @Composable
@@ -106,7 +106,7 @@ fun SkillStatView(
 @Composable
 fun SkillListItemPreview() {
     val skill = createRandomTestSkill()
-    Material3AppTheme {
+    AppTheme {
         SkillListItem(skill = skill, onClick = {}, onEdit = {}, onDelete = {})
     }
 }

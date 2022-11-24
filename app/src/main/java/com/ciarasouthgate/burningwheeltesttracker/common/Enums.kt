@@ -26,6 +26,8 @@ enum class ArthaType(val nameRes: Int) {
     DEEDS(R.string.deeds)
 }
 
-enum class RollType {
-    STANDARD, VERSUS, GRADUATED
+enum class RollType(val nameRes: Int) {
+    STANDARD(R.string.standard),
+    VERSUS(R.string.versus),
+    GRADUATED(R.string.graduated)
 }

@@ -11,7 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Material3AppTheme
+import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 
 @Composable
 fun TextFieldWithError(
@@ -38,7 +38,7 @@ fun TextFieldWithErrorPreview(
     @PreviewParameter(ErrorParameterProvider::class) error: String?
 ) {
     var value by remember { mutableStateOf("") }
-    Material3AppTheme {
+    AppTheme {
         TextFieldWithError(error) {
             TextField(value = value, onValueChange = { value = it })
         }
