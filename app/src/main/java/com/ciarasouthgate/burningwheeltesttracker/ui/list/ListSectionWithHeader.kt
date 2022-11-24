@@ -35,7 +35,9 @@ fun <T, U> ListSectionWithHeader(
                 Surface(
                     Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                    tonalElevation = 1.dp,
+                    shadowElevation = 1.dp
                 ) {
                     Text(
                         labelMap?.get(category) ?: category.toString(),

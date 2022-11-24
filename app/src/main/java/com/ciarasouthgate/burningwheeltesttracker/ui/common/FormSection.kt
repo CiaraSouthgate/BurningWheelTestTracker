@@ -13,18 +13,32 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun FormSection(
+    modifier: Modifier = Modifier, titleRes: Int? = null, content: @Composable () -> Unit
+) {
+    FormSection(
+        modifier = modifier,
+        title = {
+            titleRes?.let {
+                Text(
+                    stringResource(titleRes),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(bottom = 5.dp)
+                )
+            }
+        },
+        content = content
+    )
+
+}
+
+@Composable
+fun FormSection(
     modifier: Modifier = Modifier,
-    titleRes: Int? = null,
+    title: (@Composable () -> Unit)?,
     content: @Composable () -> Unit
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        titleRes?.let {
-            Text(
-                stringResource(titleRes),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(bottom = 5.dp)
-            )
-        }
+        title?.invoke()
         Box(modifier = Modifier.padding(horizontal = 5.dp)) {
             content()
         }

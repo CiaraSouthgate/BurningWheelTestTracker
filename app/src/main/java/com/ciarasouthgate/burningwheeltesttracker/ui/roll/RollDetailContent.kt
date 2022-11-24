@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ciarasouthgate.burningwheeltesttracker.R
@@ -52,31 +53,39 @@ fun RollDetailContent(
                 )
                 NumberDisplay(
                     value = rollState.obstacle,
-                    label = stringResource(R.string.obstacle)
+                    label = stringResource(
+                        when (rollType) {
+                            RollType.VERSUS -> R.string.opponent
+                            else -> R.string.obstacle
+                        }
+                    )
                 )
             }
         }
-        
+
         FormSection(
-            titleRes = R.string.artha,
-            modifier = Modifier.padding(horizontal = 10.dp)
+            title = {
+                Text(
+                    stringResource(R.string.artha),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(4.dp)
+                )
+            }
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 listOf(
+                    IntRollModifier(R.string.fate, rollState.fate),
                     IntRollModifier(
-                        name = stringResource(R.string.fate),
-                        number = rollState.fate
-                    ),
-                    IntRollModifier(
-                        name = stringResource(R.string.persona),
-                        number = rollState.persona,
+                        R.string.persona,
+                        rollState.persona,
                         maxValue = MAX_PERSONA
                     ),
                     IntRollModifier(
-                        name = stringResource(R.string.deeds),
-                        number = rollState.deeds,
+                        R.string.deeds,
+                        rollState.deeds,
                         maxValue = 1
                     )
                 ).forEach {
@@ -89,44 +98,34 @@ fun RollDetailContent(
             }
         }
         
-        val modifiers = mapOf(
-            stringResource(R.string.additional_dice) to listOf(
-                IntRollModifier(
-                    name = stringResource(R.string.help),
-                    number = rollState.helpingDice
-                ),
-                IntRollModifier(
-                    name = stringResource(R.string.advantage),
-                    number = rollState.advantageDice
-                ),
-                IntRollModifier(
-                    name = stringResource(R.string.forks),
-                    number = rollState.forks
-                )
-            ),
-            "Obstacle Modifiers" to listOf(
-                IntRollModifier(
-                    name = stringResource(R.string.base_obstacle),
-                    number = rollState.baseObstacle
-                ),
-                IntRollModifier(
-                    name = stringResource(R.string.disadvantage),
-                    number = rollState.disadvantage
-                ),
-                IntRollModifier(
-                    name = stringResource(R.string.other),
-                    number = rollState.otherObstacle
-                ),
-                BooleanRollModifier(
-                    name = stringResource(R.string.doubled),
-                    value = rollState.obstacleDoubled
-                )
-            )
+        val diceModifiers = listOf(
+            IntRollModifier(R.string.help, rollState.helpingDice),
+            IntRollModifier(R.string.advantage, rollState.advantageDice),
+            IntRollModifier(R.string.forks, rollState.forks)
         )
-        
+        val obstacleModifiers = listOf(
+            IntRollModifier(
+                nameRes = when (rollType) {
+                    RollType.VERSUS -> R.string.opponent_roll
+                    else -> R.string.base_obstacle
+                },
+                number = rollState.baseObstacle
+            ),
+            IntRollModifier(R.string.disadvantage, rollState.disadvantage),
+            IntRollModifier(R.string.other, rollState.otherObstacle),
+            BooleanRollModifier(R.string.doubled, rollState.obstacleDoubled)
+        )
+
+        val modifiers = mutableMapOf<String, List<RollModifier>>(
+            stringResource(R.string.additional_dice) to diceModifiers
+        )
+        if (rollType != RollType.GRADUATED) {
+            modifiers["Obstacle Modifiers"] = obstacleModifiers
+        }
+
         ListSectionWithHeader(
-            grouped = modifiers, 
-            key = { it.name }
+            grouped = modifiers,
+            key = { it.nameRes }
         ) {
             ModifierRow(rollModifier = it)
         }
@@ -141,12 +140,12 @@ private fun ModifierRow(
     Row(
         modifier = modifier
             .padding(horizontal = 10.dp)
-            .heightIn(45.dp),
+            .heightIn(50.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            rollModifier.name,
+            stringResource(rollModifier.nameRes),
             modifier = Modifier.weight(2f)
         )
         when (rollModifier) {
@@ -176,7 +175,7 @@ private fun RollCounter(
     val number = rollModifier.number
     FormCounter(
         modifier = modifier,
-        label = if (showLabel) rollModifier.name else null,
+        label = if (showLabel) stringResource(rollModifier.nameRes) else null,
         value = number.value,
         labelColor = MaterialTheme.colorScheme.onSurface,
         iconColor = MaterialTheme.colorScheme.onSurface,

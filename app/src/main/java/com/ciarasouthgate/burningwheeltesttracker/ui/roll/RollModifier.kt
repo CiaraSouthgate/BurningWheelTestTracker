@@ -5,11 +5,11 @@ import com.ciarasouthgate.burningwheeltesttracker.util.decrement
 import com.ciarasouthgate.burningwheeltesttracker.util.increment
 
 sealed class RollModifier {
-    abstract val name: String
+    abstract val nameRes: Int
 }
 
 data class IntRollModifier(
-    override val name: String,
+    override val nameRes: Int,
     val number: MutableState<Int>,
     val maxValue: Int = Int.MAX_VALUE,
     val minValue: Int = 0,
@@ -18,7 +18,7 @@ data class IntRollModifier(
 ) : RollModifier()
 
 data class BooleanRollModifier(
-    override val name: String,
+    override val nameRes: Int,
     val value: MutableState<Boolean>,
     val onToggle: (Boolean) -> Unit = { value.value = it }
 ) : RollModifier()

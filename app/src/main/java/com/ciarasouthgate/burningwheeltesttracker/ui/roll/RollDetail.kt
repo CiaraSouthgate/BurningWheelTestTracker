@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.common.RollType
@@ -67,7 +66,7 @@ fun RollDetail(
                 TabRow(selectedTabIndex = selectedTabIndex) {
                     RollType.values().forEachIndexed { index, rollType ->
                         Tab(
-                            text = { Text(stringResource(rollType.nameRes), fontSize = 12.sp) },
+                            text = { Text(stringResource(rollType.nameRes)) },
                             selected = selectedTabIndex == index,
                             onClick = { selectedTabIndex = index }
                         )
