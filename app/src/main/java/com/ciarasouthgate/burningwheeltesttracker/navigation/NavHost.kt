@@ -92,7 +92,8 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
                 ?: throw IllegalArgumentException("Missing skill ID")
             RollDetail(
                 skillId,
-                navController::popBackStack
+                navigationIcon = { BackButton(navController) },
+                onSave = navController::popBackStack
             )
         }
         composable(

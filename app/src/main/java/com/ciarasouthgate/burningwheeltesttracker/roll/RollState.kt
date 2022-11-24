@@ -39,7 +39,7 @@ class RollState(
                 helpingDice.value +
                 advantageDice.value +
                 persona.value -
-                maxOf(wounds.value, skill.exponent)
+                minOf(wounds.value, skill.exponent)
     }
 
     val obstacle by derivedStateOf {
