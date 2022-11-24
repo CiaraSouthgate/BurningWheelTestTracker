@@ -25,7 +25,8 @@ import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 @Composable
 fun SkillEditorContent(
     state: SkillEditorState,
-    skillNameError: Boolean,
+    skillNameError: Int?,
+    onNameChanged: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -33,33 +34,42 @@ fun SkillEditorContent(
         verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            verticalAlignment = Alignment.Top,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
         ) {
-            OutlinedTextField(
-                value = state.name,
-                onValueChange = { state.name = it },
-                label = {
-                    Text(
-                        stringResource(
-                            when (state.type) {
-                                Type.SKILL -> R.string.skill_name
-                                Type.STAT -> R.string.stat_name
-                                Type.ATTRIBUTE -> R.string.attribute_name
-                            }
+            TextFieldWithError(
+                errorRes = skillNameError,
+                modifier = Modifier.weight(3f)
+            ) {
+                OutlinedTextField(
+                    value = state.name,
+                    onValueChange = {
+                        state.name = it
+                        onNameChanged()
+                    },
+                    label = {
+                        Text(
+                            stringResource(
+                                when (state.type) {
+                                    Type.SKILL -> R.string.skill_name
+                                    Type.STAT -> R.string.stat_name
+                                    Type.ATTRIBUTE -> R.string.attribute_name
+                                }
+                            )
                         )
+                    },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Words
+                    ),
+                    isError = skillNameError != null,
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Transparent
                     )
-                },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Words
-                ),
-                isError = skillNameError,
-                modifier = Modifier.weight(3f),
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent
                 )
-            )
+            }
             FormCounter(
                 label = stringResource(R.string.exponent),
                 value = state.exponent,
@@ -68,10 +78,12 @@ fun SkillEditorContent(
                 alignment = Alignment.Start,
                 labelPosition = LabelPosition.TOP,
                 labelColor = MaterialTheme.colorScheme.onSurface,
+                fillHeight = true,
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 5.dp)
                     .fillMaxWidth()
+                    .height(TextFieldDefaults.MinHeight)
             )
         }
 
@@ -153,6 +165,6 @@ fun SkillEditorContentPreview() {
     AppTheme {
         val character = Character("Test Character", emptyList())
         val state = rememberSkillEditorState(character)
-        SkillEditorContent(state, false)
+        SkillEditorContent(state, null, {})
     }
 }

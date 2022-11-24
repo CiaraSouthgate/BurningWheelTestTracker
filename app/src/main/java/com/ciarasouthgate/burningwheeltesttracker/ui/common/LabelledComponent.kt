@@ -1,6 +1,7 @@
 package com.ciarasouthgate.burningwheeltesttracker.ui.common
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,7 +16,7 @@ fun LabelledComponent(
     modifier: Modifier = Modifier,
     alignment: Alignment.Horizontal = Alignment.Start,
     labelPosition: LabelPosition = LabelPosition.TOP,
-    content: @Composable () -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
     LabelledComponent(
         label = { ComponentLabel(label) },
@@ -32,7 +33,7 @@ fun LabelledComponent(
     modifier: Modifier = Modifier,
     alignment: Alignment.Horizontal = Alignment.Start,
     labelPosition: LabelPosition = LabelPosition.TOP,
-    content: @Composable () -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
         modifier = modifier,

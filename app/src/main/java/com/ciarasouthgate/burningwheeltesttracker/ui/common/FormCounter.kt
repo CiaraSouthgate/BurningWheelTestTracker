@@ -18,7 +18,8 @@ fun FormCounter(
     alignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     labelPosition: LabelPosition = LabelPosition.BOTTOM,
     labelColor: Color = Color.Unspecified,
-    iconColor: Color = MaterialTheme.colorScheme.onSurface.copy(ContentAlpha.medium)
+    iconColor: Color = MaterialTheme.colorScheme.onSurface.copy(ContentAlpha.medium),
+    fillHeight: Boolean = false
 ) {
     CounterWithLabel(
         label = {
@@ -37,6 +38,7 @@ fun FormCounter(
         labelPosition = labelPosition,
         alignment = alignment,
         textStyle = LocalTextStyle.current,
-        modifier = modifier
+        modifier = modifier,
+        fillHeight = fillHeight
     )
 }

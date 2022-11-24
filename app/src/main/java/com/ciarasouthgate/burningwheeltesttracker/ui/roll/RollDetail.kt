@@ -30,6 +30,7 @@ import com.ciarasouthgate.burningwheeltesttracker.viewmodel.rollDetailViewModel
 @Composable
 fun RollDetail(
     skillId: Long,
+    onSave: () -> Unit,
     navigationIcon: @Composable () -> Unit = {},
     viewModel: SkillViewModel = rollDetailViewModel(skillId)
 ) {
@@ -39,14 +40,13 @@ fun RollDetail(
     var showSuccessDialog by remember { mutableStateOf(false) }
 
     val skill = viewModel.skill.observeAsState()
-    val character = viewModel.character.observeAsState()
     if (skill.value != null) {
         val rollState = rememberRollState(skill.value!!)
         Scaffold(
             topBar = {
                 SmallTopAppBar(
                     navigationIcon = navigationIcon,
-                    title = { Text(character.value?.name.orEmpty()) },
+                    title = { Text(skill.value?.name.orEmpty()) },
                     actions = {
                         IconButton(
                             onClick = {
@@ -115,6 +115,7 @@ fun RollDetail(
         if (saveAttempted) {
             LaunchedEffect(Unit) {
                 viewModel.editSkill(rollState.getUpdatedSkill())
+                onSave()
             }
         }
     }
@@ -133,7 +134,8 @@ fun RollScreenPreview() {
                     Icon(Icons.Default.ArrowBack, stringResource(R.string.back))
                 }
             },
-            object : SkillViewModel {
+            onSave = {},
+            viewModel = object : SkillViewModel {
                 override val skill = MutableLiveData(createTestSkill(skillName = skillName))
                 override val character = MutableLiveData(Character(name = characterName))
                 override suspend fun addSkill(skill: Skill): Long = 1L

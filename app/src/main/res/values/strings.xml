@@ -17,6 +17,8 @@
     <string name="black">Black</string>
     <string name="cancel">Cancel</string>
     <string name="challenging">Challenging</string>
+    <string name="character_name_exists">Character name already exists</string>
+    <string name="character_name_required">Character name is required</string>
     <string name="characters">Characters</string>
     <string name="collapse">Collapse</string>
     <string name="completed_test">Completed Test</string>
@@ -42,7 +44,6 @@
     <string name="increment">Increment</string>
     <string name="modify">Modify</string>
     <string name="name">Name</string>
-    <string name="name_exists">Character name already exists</string>
     <string name="no_characters">No characters found. Add some!</string>
     <string name="no_skills">No skills found. Add some!</string>
     <string name="obstacle">Obstacle</string>
@@ -51,13 +52,16 @@
     <string name="optional_test">Optional Test</string>
     <string name="other">Other</string>
     <string name="persona">Persona</string>
+    <string name="preference_file_key">com.ciarasouthgate.burningwheeltesttracker.PREFERENCE_FILE_KEY</string>
     <string name="required_test">Required Test</string>
     <string name="routine">Routine</string>
     <string name="save">Save</string>
     <string name="search">Search</string>
     <string name="shade">Shade</string>
     <string name="skill">Skill</string>
+    <string name="skill_exists">Skill already exists</string>
     <string name="skill_name">Skill Name</string>
+    <string name="skill_name_required">Skill name is required</string>
     <string name="skills">Skills</string>
     <string name="skills_header">%s\'s Skills</string>
     <string name="standard">Standard</string>
@@ -75,6 +79,7 @@
     <string name="white">White</string>
     <string name="success_required">Tests must be successful?</string>
     <string name="no">No</string>
+    <string name="wounds">Wounds</string>
     <string name="yes">Yes</string>
 
     <plurals name="num_skills">

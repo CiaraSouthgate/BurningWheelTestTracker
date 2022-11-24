@@ -101,7 +101,8 @@ fun RollDetailContent(
         val diceModifiers = listOf(
             IntRollModifier(R.string.help, rollState.helpingDice),
             IntRollModifier(R.string.advantage, rollState.advantageDice),
-            IntRollModifier(R.string.forks, rollState.forks)
+            IntRollModifier(R.string.forks, rollState.forks),
+            IntRollModifier(R.string.wounds, rollState.wounds)
         )
         val obstacleModifiers = listOf(
             IntRollModifier(

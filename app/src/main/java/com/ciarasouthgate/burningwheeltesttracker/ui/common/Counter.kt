@@ -100,7 +100,8 @@ fun CounterWithLabel(
     iconColor: Color = Color.Unspecified,
     alignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     labelPosition: LabelPosition = LabelPosition.BOTTOM,
-    textStyle: TextStyle = MaterialTheme.typography.titleLarge
+    textStyle: TextStyle = MaterialTheme.typography.titleLarge,
+    fillHeight: Boolean = false
 ) {
     LabelledComponent(
         label = label,
@@ -114,7 +115,9 @@ fun CounterWithLabel(
             onDecrement,
             iconColor = iconColor,
             textStyle = textStyle,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(if (fillHeight) Modifier.weight(1f) else Modifier)
         )
     }
 }

@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.TestTrackerDialog
+import com.ciarasouthgate.burningwheeltesttracker.ui.common.TextFieldWithError
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 
 @Composable
@@ -23,7 +24,7 @@ fun AddCharacterDialog(
     character: Character? = null
 ) {
     var characterName by remember { mutableStateOf(character?.name.orEmpty()) }
-    var isError by remember { mutableStateOf(false) }
+    var characterNameError by remember { mutableStateOf<Int?>(null) }
     var isSaveAttempted by remember { mutableStateOf(false) }
     val isEditing by derivedStateOf { character != null }
 
@@ -31,28 +32,27 @@ fun AddCharacterDialog(
         title = stringResource(if (isEditing) R.string.edit_character else R.string.add_character),
         onDismiss = onDismiss,
         content = {
-            OutlinedTextField(
-                value = characterName,
-                onValueChange = {
-                    characterName = it
-                    isError = false
-                },
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent
-                ),
-                maxLines = 1,
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Words
-                ),
-                isError = isError,
-                placeholder = { Text(stringResource(R.string.name)) },
+            TextFieldWithError(
+                errorRes = characterNameError,
                 modifier = Modifier.align(Alignment.Center)
-            )
-            Text(
-                stringResource(R.string.name_exists),
-                style = MaterialTheme.typography.bodySmall,
-                color = if (isError) MaterialTheme.colorScheme.error else Color.Transparent
-            )
+            ) {
+                OutlinedTextField(
+                    value = characterName,
+                    onValueChange = {
+                        characterName = it
+                        characterNameError = null
+                    },
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Transparent
+                    ),
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Words
+                    ),
+                    isError = characterNameError != null,
+                    placeholder = { Text(stringResource(R.string.name)) }
+                )
+            }
         },
         buttons = {
             TextButton(onClick = onDismiss) {
@@ -64,8 +64,8 @@ fun AddCharacterDialog(
             Button(
                 onClick = {
                     if (characterName.isBlank()) {
-                        isError = true
-                    } else if (!isError) {
+                        characterNameError = R.string.character_name_required
+                    } else {
                         isSaveAttempted = true
                     }
                 }
@@ -86,7 +86,9 @@ fun AddCharacterDialog(
                 )
                 if (onEdit(updatedCharacter)) it.id else null
             } ?: onAdd(characterName)
-            characterId?.let { onCharacterSaved(it) } ?: run { isError = true }
+            characterId?.let { onCharacterSaved(it) } ?: run {
+                characterNameError = R.string.character_name_exists
+            }
             isSaveAttempted = false
         }
     }

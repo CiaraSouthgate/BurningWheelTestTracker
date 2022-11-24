@@ -9,6 +9,7 @@ class RollState(
     initialHelpingDice: Int = 0,
     initialAdvantageDice: Int = 0,
     initialForks: Int = 0,
+    initialWounds: Int = 0,
     initialBaseObstacle: Int = 0,
     initialDisadvantage: Int = 0,
     initialOtherObstacle: Int = 0,
@@ -20,6 +21,7 @@ class RollState(
     val helpingDice = mutableStateOf(initialHelpingDice)
     val advantageDice = mutableStateOf(initialAdvantageDice)
     val forks = mutableStateOf(initialForks)
+    val wounds = mutableStateOf(initialWounds)
 
     val baseObstacle = mutableStateOf(initialBaseObstacle)
     val disadvantage = mutableStateOf(initialDisadvantage)
@@ -33,15 +35,17 @@ class RollState(
 
     val diceRolled by derivedStateOf {
         (skill.exponent * if (deeds.value > 0) 2 else 1) +
-                forks.value + helpingDice.value + advantageDice.value + persona.value
+                forks.value +
+                helpingDice.value +
+                advantageDice.value +
+                persona.value -
+                maxOf(wounds.value, skill.exponent)
     }
 
     val obstacle by derivedStateOf {
         (baseObstacle.value * if (obstacleDoubled.value) 2 else 1) +
                 disadvantage.value + otherObstacle.value
     }
-
-    val skillName = skill.name
 
     fun getUpdatedSkill(ignoreTest: Boolean = false): Skill {
         if (!ignoreTest) {
@@ -70,6 +74,7 @@ fun rememberRollState(
     helpingDice: Int = 0,
     advantageDice: Int = 0,
     forks: Int = 0,
+    wounds: Int = 0,
     baseObstacle: Int = 0,
     disadvantage: Int = 0,
     otherObstacle: Int = 0,
@@ -82,6 +87,7 @@ fun rememberRollState(
     helpingDice,
     advantageDice,
     forks,
+    wounds,
     baseObstacle,
     disadvantage,
     otherObstacle,
@@ -95,6 +101,7 @@ fun rememberRollState(
         helpingDice,
         advantageDice,
         forks,
+        wounds,
         baseObstacle,
         disadvantage,
         otherObstacle,

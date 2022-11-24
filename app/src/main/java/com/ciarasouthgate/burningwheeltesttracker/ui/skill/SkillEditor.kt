@@ -30,7 +30,7 @@ fun SkillEditor(
     val character by viewModel.character.observeAsState()
     val skill by viewModel.skill.observeAsState()
 
-    var skillNameError by remember { mutableStateOf(false) }
+    var skillNameError by remember { mutableStateOf<Int?>(null) }
     var isSaveAttempted by remember { mutableStateOf(false) }
 
     character?.let { ch ->
@@ -52,21 +52,30 @@ fun SkillEditor(
             SkillEditorContent(
                 state,
                 skillNameError,
+                onNameChanged = { skillNameError = null },
                 modifier = Modifier.padding(paddingValues)
             )
         }
 
         if (isSaveAttempted) {
-            LaunchedEffect(Unit) {
-                val updatedSkill = state.getSkill(ch)
-                skillNameError = if (skillId == null) {
-                    viewModel.addSkill(updatedSkill) == null
-                } else {
-                    !viewModel.editSkill(updatedSkill)
+            if (state.name.isBlank()) {
+                skillNameError = R.string.skill_name_required
+            } else {
+                LaunchedEffect(Unit) {
+                    val updatedSkill = state.getSkill(ch)
+                    val isSuccess = if (skillId == null) {
+                        viewModel.addSkill(updatedSkill) != null
+                    } else {
+                        viewModel.editSkill(updatedSkill)
+                    }
+                    if (isSuccess) {
+                        onSkillSaved()
+                    } else {
+                        skillNameError = R.string.skill_exists
+                    }
                 }
-                isSaveAttempted = false
-                onSkillSaved()
             }
+            isSaveAttempted = false
         }
     }
 }

@@ -90,7 +90,10 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
         ) { entry ->
             val skillId = entry.arguments?.getLong(SKILL_ID)
                 ?: throw IllegalArgumentException("Missing skill ID")
-            RollDetail(skillId)
+            RollDetail(
+                skillId,
+                navController::popBackStack
+            )
         }
         composable(
             "$SKILL_EDITOR/{$CHARACTER_ID}?$SKILL_ID={$SKILL_ID}",
