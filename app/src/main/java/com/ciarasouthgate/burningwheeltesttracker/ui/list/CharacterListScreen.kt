@@ -8,6 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
+import com.ciarasouthgate.burningwheeltesttracker.ui.common.SwipeToDelete
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.getCharacterListViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.CharacterListViewModel
@@ -41,9 +42,7 @@ fun CharacterListScreen(
             items = characters,
             key = { it.name }
         ) { character ->
-            CharacterListItem(
-                character,
-                onCharacterClicked,
+            SwipeToDelete(
                 onEdit = {
                     activeCharacter = character
                     showCharacterDialog = true
@@ -52,7 +51,12 @@ fun CharacterListScreen(
                     activeCharacter = character
                     showDeleteDialog = true
                 }
-            )
+            ) {
+                CharacterListItem(
+                    character,
+                    onCharacterClicked
+                )
+            }
         }
     }
     if (showCharacterDialog) {

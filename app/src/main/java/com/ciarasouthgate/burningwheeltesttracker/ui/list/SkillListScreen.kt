@@ -8,6 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.common.Type
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
+import com.ciarasouthgate.burningwheeltesttracker.ui.common.SwipeToDelete
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.getSkillListViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.SkillListViewModel
@@ -47,9 +48,7 @@ fun SkillListScreen(
             labelMap = labelMap,
             spaceAtBottom = true
         ) {
-            SkillListItem(
-                it,
-                onSkillClicked,
+            SwipeToDelete(
                 onEdit = {
                     activeSkill = it
                     editDeleteDialogState = EditDeleteDialogState.EDIT
@@ -58,7 +57,9 @@ fun SkillListScreen(
                     activeSkill = it
                     editDeleteDialogState = EditDeleteDialogState.DELETE
                 }
-            )
+            ) {
+                SkillListItem(it, onSkillClicked)
+            }
         }
     }
 
@@ -72,7 +73,7 @@ fun SkillListScreen(
                 },
                 onConfirmAction = {
                     when (state) {
-                        EditDeleteDialogState.DELETE -> { viewModel.deleteListItem(skill) }
+                        EditDeleteDialogState.DELETE -> viewModel.deleteListItem(skill)
                         EditDeleteDialogState.EDIT -> onSkillEdit(skill)
                     }
                 },

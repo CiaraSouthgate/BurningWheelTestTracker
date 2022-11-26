@@ -91,6 +91,7 @@ fun AddCharacterDialog(
                 characterNameError = R.string.character_name_exists
             }
             isSaveAttempted = false
+            onDismiss()
         }
     }
 }

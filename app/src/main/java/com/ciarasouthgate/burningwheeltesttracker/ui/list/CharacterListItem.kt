@@ -14,44 +14,37 @@ import androidx.compose.ui.unit.dp
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.common.Type
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
-import com.ciarasouthgate.burningwheeltesttracker.ui.common.SwipeToDelete
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Black50Alpha
 
 @Composable
 fun CharacterListItem(
     character: Character,
     onClick: (Character) -> Unit,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val resources = LocalContext.current.resources
     val skillCount = character.skills.count { it.type == Type.SKILL }
 
-    SwipeToDelete(
-        onDelete = onDelete,
-        onEdit = onEdit,
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onClick(character) }
+            .background(color = MaterialTheme.colorScheme.background)
+            .padding(vertical = 5.dp, horizontal = 15.dp)
     ) {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .clickable { onClick(character) }
-                .background(color = MaterialTheme.colorScheme.background)
-                .padding(vertical = 5.dp, horizontal = 15.dp)
-        ) {
-            Text(
-                text = character.name,
-                style = MaterialTheme.typography.bodyLarge,
-            )
-            Text(
-                text = resources.getQuantityString(
-                    R.plurals.num_skills,
-                    skillCount,
-                    skillCount
-                ),
-                style = MaterialTheme.typography.bodyMedium,
-                color = Black50Alpha
-            )
-        }
+        Text(
+            text = character.name,
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        Text(
+            text = resources.getQuantityString(
+                R.plurals.num_skills,
+                skillCount,
+                skillCount
+            ),
+            style = MaterialTheme.typography.bodyMedium,
+            color = Black50Alpha
+        )
+
     }
 }

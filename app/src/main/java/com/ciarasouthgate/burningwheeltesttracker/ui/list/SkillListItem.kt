@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
-import com.ciarasouthgate.burningwheeltesttracker.ui.common.SwipeToDelete
 import com.ciarasouthgate.burningwheeltesttracker.ui.skill.SkillTestDisplay
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.Alegreya
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
@@ -26,46 +25,39 @@ import com.ciarasouthgate.burningwheeltesttracker.util.createRandomTestSkill
 fun SkillListItem(
     skill: Skill,
     onClick: (Skill) -> Unit,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    SwipeToDelete(
-        onEdit = onEdit,
-        onDelete = onDelete
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+            .clickable { onClick(skill) }
+            .padding(5.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min)
-                .clickable { onClick(skill) }
-                .padding(5.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        SkillStatView(
+            skill,
+            modifier = Modifier.weight(1f)
+        )
+        ProvideTextStyle(
+            TextStyle(
+                fontFamily = Alegreya,
+                fontWeight = FontWeight.Medium,
+                fontSize = 23.sp,
+                letterSpacing = 0.15.sp
+            )
         ) {
-            SkillStatView(
-                skill,
-                modifier = Modifier.weight(1f)
+            Text(
+                stringResource(skill.shade.nameRes)[0].toString(),
+                fontWeight = FontWeight.Bold
             )
-            ProvideTextStyle(
-                TextStyle(
-                    fontFamily = Alegreya,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 23.sp,
-                    letterSpacing = 0.15.sp
-                )
-            ) {
-                Text(
-                    stringResource(skill.shade.nameRes)[0].toString(),
-                    fontWeight = FontWeight.Bold
-                )
-                Text(skill.exponent.toString())
-            }
-            SkillTestDisplay(
-                skill,
-                modifier = Modifier.padding(start = 10.dp)
-            )
+            Text(skill.exponent.toString())
         }
+        SkillTestDisplay(
+            skill,
+            modifier = Modifier.padding(start = 10.dp)
+        )
     }
 }
 
@@ -107,6 +99,9 @@ fun SkillStatView(
 fun SkillListItemPreview() {
     val skill = createRandomTestSkill()
     AppTheme {
-        SkillListItem(skill = skill, onClick = {}, onEdit = {}, onDelete = {})
+        SkillListItem(
+            skill = skill,
+            onClick = {}
+        )
     }
 }
