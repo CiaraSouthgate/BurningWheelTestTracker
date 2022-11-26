@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -27,6 +27,7 @@ fun <T, U> ListSectionWithHeader(
     key: (U) -> Any,
     modifier: Modifier = Modifier,
     labelMap: Map<T, String>? = null,
+    spaceAtBottom: Boolean = false,
     itemContent: @Composable LazyItemScope.(U) -> Unit
 ) {
     LazyColumn(modifier = modifier) {
@@ -48,14 +49,18 @@ fun <T, U> ListSectionWithHeader(
                 }
             }
 
-            items(content, key) { item ->
+            itemsIndexed(content, { _, item -> key(item) }) { index, item ->
                 itemContent(item)
-                Divider(thickness = 0.5.dp)
+                if (index < content.lastIndex) {
+                    Divider(thickness = 0.5.dp)
+                }
             }
         }
-        item(-1) {
-            // empty item to keep the FAB from blocking the bottom
-            Box(modifier = Modifier.height(80.dp))
+        if (spaceAtBottom) {
+            item(-1) {
+                // empty item to keep the FAB from blocking the bottom
+                Box(modifier = Modifier.height(80.dp))
+            }
         }
     }
 }

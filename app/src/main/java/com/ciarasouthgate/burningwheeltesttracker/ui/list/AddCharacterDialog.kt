@@ -80,12 +80,13 @@ fun AddCharacterDialog(
 
     if (isSaveAttempted) {
         LaunchedEffect(Unit) {
+            val trimmedName = characterName.trim()
             val characterId = character?.let {
                 val updatedCharacter = character.copy(
-                    character = character.character.copy(name = characterName)
+                    character = character.character.copy(name = trimmedName)
                 )
                 if (onEdit(updatedCharacter)) it.id else null
-            } ?: onAdd(characterName)
+            } ?: onAdd(trimmedName)
             characterId?.let { onCharacterSaved(it) } ?: run {
                 characterNameError = R.string.character_name_exists
             }

@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.ciarasouthgate.burningwheeltesttracker.navigation.TrackerNavHost
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
-import com.ciarasouthgate.burningwheeltesttracker.viewmodel.RollDetailViewModel
+import com.ciarasouthgate.burningwheeltesttracker.viewmodel.RollDetailViewModelImpl
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.SkillEditorViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.list.SkillListViewModelImpl
 import dagger.hilt.EntryPoint
@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
     @InstallIn(ActivityComponent::class)
     interface ViewModelFactoryProvider {
         fun skillListViewModelFactory(): SkillListViewModelImpl.Factory
-        fun rollDetailViewModelFactory(): RollDetailViewModel.Factory
+        fun rollDetailViewModelFactory(): RollDetailViewModelImpl.Factory
         fun skillEditorViewModelFactory(): SkillEditorViewModel.Factory
     }
 }

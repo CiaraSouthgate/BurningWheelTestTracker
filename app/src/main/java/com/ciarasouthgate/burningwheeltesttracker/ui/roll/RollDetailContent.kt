@@ -1,13 +1,14 @@
 package com.ciarasouthgate.burningwheeltesttracker.ui.roll
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowLeft
+import androidx.compose.material.icons.filled.ArrowRight
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.common.MAX_PERSONA
 import com.ciarasouthgate.burningwheeltesttracker.common.RollType
+import com.ciarasouthgate.burningwheeltesttracker.common.TestType
 import com.ciarasouthgate.burningwheeltesttracker.roll.RollState
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.FormCounter
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.FormSection
@@ -28,15 +30,14 @@ import com.ciarasouthgate.burningwheeltesttracker.util.increment
 @Composable
 fun RollDetailContent(
     rollState: RollState,
-    rollType: RollType,
     modifier: Modifier = Modifier
 ) {
+    val rollType by rollState.rollType
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(top = 10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(15.dp)
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -60,6 +61,38 @@ fun RollDetailContent(
                         }
                     )
                 )
+            }
+        }
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            val specifiable = rollState.diceRolled == 1 && rollState.obstacle == 1
+            var difficulty by rollState.userSpecifiedDifficulty
+            val showLeftArrow =
+                specifiable && difficulty == TestType.DIFFICULT
+            val showRightArrow =
+                specifiable && difficulty == TestType.ROUTINE
+            IconButton(
+                onClick = { difficulty = TestType.ROUTINE },
+                enabled = showLeftArrow,
+                modifier = Modifier.alpha(if (showLeftArrow) 1.0f else 0.0f)
+            ) {
+                Icon(Icons.Default.ArrowLeft, stringResource(R.string.difficulty_decrease))
+            }
+            Text(
+                stringResource(rollState.difficulty.nameRes),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontFeatureSettings = "smcp"
+                )
+            )
+            IconButton(
+                onClick = { difficulty = TestType.DIFFICULT },
+                enabled = showRightArrow,
+                modifier = Modifier.alpha(if (showRightArrow) 1.0f else 0.0f)
+            ) {
+                Icon(Icons.Default.ArrowRight, stringResource(R.string.difficulty_increase))
             }
         }
 
@@ -97,7 +130,7 @@ fun RollDetailContent(
                 }
             }
         }
-        
+
         val diceModifiers = listOf(
             IntRollModifier(R.string.help, rollState.helpingDice),
             IntRollModifier(R.string.advantage, rollState.advantageDice),
@@ -126,7 +159,8 @@ fun RollDetailContent(
 
         ListSectionWithHeader(
             grouped = modifiers,
-            key = { it.nameRes }
+            key = { it.nameRes },
+            modifier = Modifier.padding(top = 10.dp)
         ) {
             ModifierRow(rollModifier = it)
         }
@@ -223,10 +257,8 @@ private fun NumberDisplay(
 @Composable
 private fun RollDetailPreview() {
     val skill = createTestSkill(skillName = "Stealthy")
+    val type = RollType.STANDARD
     AppTheme {
-        RollDetailContent(
-            RollState(skill),
-            RollType.STANDARD
-        )
+        RollDetailContent(RollState(skill, remember { mutableStateOf(type) }))
     }
 }

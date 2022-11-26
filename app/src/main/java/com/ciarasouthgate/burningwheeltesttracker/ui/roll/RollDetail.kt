@@ -8,22 +8,21 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.MutableLiveData
 import com.ciarasouthgate.burningwheeltesttracker.R
 import com.ciarasouthgate.burningwheeltesttracker.common.RollType
-import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
-import com.ciarasouthgate.burningwheeltesttracker.roll.rememberRollState
+import com.ciarasouthgate.burningwheeltesttracker.roll.RollState
+import com.ciarasouthgate.burningwheeltesttracker.ui.common.LoadingPage
+import com.ciarasouthgate.burningwheeltesttracker.ui.common.TestTrackerAppBar
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.TestTrackerDialog
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 import com.ciarasouthgate.burningwheeltesttracker.util.createTestSkill
-import com.ciarasouthgate.burningwheeltesttracker.viewmodel.SkillViewModel
+import com.ciarasouthgate.burningwheeltesttracker.viewmodel.RollDetailViewModel
 import com.ciarasouthgate.burningwheeltesttracker.viewmodel.rollDetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,31 +31,21 @@ fun RollDetail(
     skillId: Long,
     onSave: () -> Unit,
     navigationIcon: @Composable () -> Unit = {},
-    viewModel: SkillViewModel = rollDetailViewModel(skillId)
+    viewModel: RollDetailViewModel = rollDetailViewModel(skillId)
 ) {
-    var selectedTabIndex by remember { mutableStateOf(0) }
-    val rollType by derivedStateOf { RollType.values()[selectedTabIndex] }
-    var saveAttempted by remember { mutableStateOf(false) }
-    var showSuccessDialog by remember { mutableStateOf(false) }
+    val selectedTabIndex by viewModel.rollTypeIndex
 
-    val skill = viewModel.skill.observeAsState()
-    if (skill.value != null) {
-        val rollState = rememberRollState(skill.value!!)
+    viewModel.skill.value?.let { skill ->
+        var saveAttempted by remember { mutableStateOf(false) }
+        var showSuccessDialog by remember { mutableStateOf(false) }
+        var ignoreTest by remember { mutableStateOf<Boolean?>(null) }
         Scaffold(
             topBar = {
-                SmallTopAppBar(
+                TestTrackerAppBar(
                     navigationIcon = navigationIcon,
-                    title = { Text(skill.value?.name.orEmpty()) },
+                    title = skill.name,
                     actions = {
-                        IconButton(
-                            onClick = {
-                                if (skill.value!!.successRequired) {
-                                    showSuccessDialog = true
-                                } else {
-                                    saveAttempted = true
-                                }
-                            }
-                        ) {
+                        IconButton(onClick = { saveAttempted = true }) {
                             Icon(Icons.Default.Save, stringResource(R.string.save))
                         }
                     }
@@ -68,54 +57,64 @@ fun RollDetail(
                         Tab(
                             text = { Text(stringResource(rollType.nameRes)) },
                             selected = selectedTabIndex == index,
-                            onClick = { selectedTabIndex = index }
+                            onClick = { viewModel.onRollTypeChanged(index) }
                         )
                     }
                 }
             }
         ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                RollDetailContent(
-                    rollState,
-                    rollType,
-                    Modifier.padding(top = 10.dp)
-                )
+            if (viewModel.loading.value) {
+                LoadingPage(modifier = Modifier.padding(paddingValues))
+            } else {
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    RollDetailContent(
+                        viewModel.state,
+                        Modifier.padding(top = 5.dp)
+                    )
+                }
             }
-        }
 
-        if (showSuccessDialog) {
-            TestTrackerDialog(
-                onDismiss = { showSuccessDialog = false },
-                title = stringResource(R.string.test_success_title),
-                content = {
-                    Text(stringResource(R.string.test_success_message, skill.value!!.name))
-                }
-            ) {
-                var successful by remember { mutableStateOf<Boolean?>(null) }
-                OutlinedButton(onClick = { successful = false }) {
-                    Text(stringResource(R.string.no))
-                }
-                OutlinedButton(onClick = { successful = true }) {
-                    Text(stringResource(R.string.yes))
-                }
-                successful?.let {
+            if (saveAttempted) {
+                if (skill.successRequired && ignoreTest == null) {
+                    showSuccessDialog = true
+                } else {
                     LaunchedEffect(Unit) {
-                        viewModel.editSkill(rollState.getUpdatedSkill(it))
+                        viewModel.editSkill(viewModel.state.getUpdatedSkill())
+                        onSave()
                     }
-                    showSuccessDialog = false
                 }
             }
-        }
 
-        if (saveAttempted) {
-            LaunchedEffect(Unit) {
-                viewModel.editSkill(rollState.getUpdatedSkill())
-                onSave()
+            if (showSuccessDialog) {
+                TestTrackerDialog(
+                    onDismiss = { showSuccessDialog = false },
+                    title = stringResource(R.string.test_success_title),
+                    content = {
+                        Text(stringResource(R.string.test_success_message, skill.name))
+                    }
+                ) {
+                    OutlinedButton(
+                        onClick = {
+                            ignoreTest = true
+                            showSuccessDialog = false
+                        }
+                    ) {
+                        Text(stringResource(R.string.no))
+                    }
+                    OutlinedButton(
+                        onClick = {
+                            ignoreTest = false
+                            showSuccessDialog = false
+                        }
+                    ) {
+                        Text(stringResource(R.string.yes))
+                    }
+                }
             }
         }
     }
@@ -124,8 +123,7 @@ fun RollDetail(
 @Preview(widthDp = 340)
 @Composable
 fun RollScreenPreview() {
-    val characterName = "Test Character"
-    val skillName = "Test Skill"
+    val skill = createTestSkill()
     AppTheme {
         RollDetail(
             1,
@@ -135,9 +133,20 @@ fun RollScreenPreview() {
                 }
             },
             onSave = {},
-            viewModel = object : SkillViewModel {
-                override val skill = MutableLiveData(createTestSkill(skillName = skillName))
-                override val character = MutableLiveData(Character(name = characterName))
+            viewModel = object : RollDetailViewModel {
+                override val rollTypeIndex = remember { mutableStateOf(0) }
+                override val rollType: State<RollType> = derivedStateOf {
+                    RollType.values()[rollTypeIndex.value]
+                }
+                override val state: RollState = RollState(skill, rollType)
+
+                override fun onRollTypeChanged(index: Int) {
+                    rollTypeIndex.value = index
+                }
+
+                override val skill: State<Skill?> = remember { mutableStateOf(skill) }
+                override val loading: State<Boolean> = remember { mutableStateOf(false) }
+
                 override suspend fun addSkill(skill: Skill): Long = 1L
                 override suspend fun editSkill(skill: Skill): Boolean = true
                 override suspend fun deleteSkill(skill: Skill) {}

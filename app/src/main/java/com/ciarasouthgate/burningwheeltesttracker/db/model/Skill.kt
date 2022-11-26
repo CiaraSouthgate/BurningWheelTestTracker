@@ -164,10 +164,17 @@ class Skill(
             (requiredRoutine && requiredDifficult && optionalTestTypes) ||
             (requiredRoutine && requiredChallenging && optionalTestTypes)
         ) {
-            exponent++
+            advanceSkill()
             return true
         }
         return false
+    }
+
+    private fun advanceSkill() {
+        exponent++
+        routineTests = 0
+        difficultTests = 0
+        challengingTests = 0
     }
 
     private fun checkArthaAdvancement(): Boolean {
@@ -214,5 +221,9 @@ class Skill(
                 else -> 1
             }
         }
+    }
+
+    override fun toString(): String {
+        return "Skill(id=$id, characterId=$characterId, name='$name', type=$type, shade=$shade, aristeiaAvailable=$aristeiaAvailable, aristeiaUsed=$aristeiaUsed, successRequired=$successRequired, exponent=$exponent, routineTests=$routineTests, difficultTests=$difficultTests, challengingTests=$challengingTests, fateSpent=$fateSpent, personaSpent=$personaSpent, deedsSpent=$deedsSpent)"
     }
 }

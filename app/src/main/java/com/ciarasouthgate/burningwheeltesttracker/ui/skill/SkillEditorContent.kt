@@ -12,13 +12,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ciarasouthgate.burningwheeltesttracker.R
-import com.ciarasouthgate.burningwheeltesttracker.common.ArthaType
-import com.ciarasouthgate.burningwheeltesttracker.common.Shade
-import com.ciarasouthgate.burningwheeltesttracker.common.TestType
-import com.ciarasouthgate.burningwheeltesttracker.common.Type
-import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
+import com.ciarasouthgate.burningwheeltesttracker.common.*
 import com.ciarasouthgate.burningwheeltesttracker.skill.SkillEditorState
-import com.ciarasouthgate.burningwheeltesttracker.skill.rememberSkillEditorState
 import com.ciarasouthgate.burningwheeltesttracker.ui.common.*
 import com.ciarasouthgate.burningwheeltesttracker.ui.theme.AppTheme
 
@@ -73,7 +68,7 @@ fun SkillEditorContent(
             FormCounter(
                 label = stringResource(R.string.exponent),
                 value = state.exponent,
-                onIncrement = { state.exponent++ },
+                onIncrement = { if (state.exponent < MAX_EXPONENT) state.exponent++ },
                 onDecrement = { if (state.exponent > 1) state.exponent-- },
                 alignment = Alignment.Start,
                 labelPosition = LabelPosition.TOP,
@@ -121,7 +116,8 @@ fun SkillEditorContent(
             R.string.tests_completed,
             TestType.values(),
             { it.nameRes },
-            state.tests
+            state.tests,
+            maxValue = MAX_TESTS_NEEDED
         )
 
         MultiCounterRow(
@@ -163,8 +159,7 @@ private fun <T> SelectorButtonGroup(
 @Composable
 fun SkillEditorContentPreview() {
     AppTheme {
-        val character = Character("Test Character", emptyList())
-        val state = rememberSkillEditorState(character)
+        val state = SkillEditorState(null)
         SkillEditorContent(state, null, {})
     }
 }

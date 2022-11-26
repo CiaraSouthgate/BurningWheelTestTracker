@@ -81,6 +81,8 @@
     <string name="no">No</string>
     <string name="wounds">Wounds</string>
     <string name="yes">Yes</string>
+    <string name="difficulty_decrease">Decrease test difficulty</string>
+    <string name="difficulty_increase">Increase test difficulty</string>
 
     <plurals name="num_skills">
         <item quantity="one">%d skill</item>

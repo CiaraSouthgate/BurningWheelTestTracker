@@ -11,6 +11,8 @@ import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
 import timber.log.Timber
 import java.util.concurrent.Executors
 
+private const val TAG = "AppDatabase"
+
 @Database(
     entities = [
         BaseCharacter::class,
@@ -31,8 +33,10 @@ fun getDatabase(context: Context): AppDatabase {
             context.applicationContext,
             AppDatabase::class.java,
             "skills"
-        ).setQueryCallback({ sqlQuery, bindArgs ->
-            Timber.d("SQL Query: $sqlQuery, SQL Args: $bindArgs")
-        }, Executors.newSingleThreadExecutor()).build().also { INSTANCE = it }
+        ).setQueryCallback(
+            { sqlQuery, bindArgs ->
+                Timber.d(TAG, "SQL Query: $sqlQuery, SQL Args: $bindArgs")
+            }, Executors.newSingleThreadExecutor()
+        ).build().also { INSTANCE = it }
     }
 }

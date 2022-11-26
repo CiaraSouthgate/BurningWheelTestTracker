@@ -21,6 +21,9 @@ import com.ciarasouthgate.burningwheeltesttracker.ui.skill.SkillEditor
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import timber.log.Timber
+
+private const val TAG = "NavHost"
 
 private const val CHARACTERS = "characters"
 private const val SKILLS = "skills"
@@ -44,6 +47,7 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
         popExitTransition = { slideOutHorizontally { it } }
     ) {
         composable(CHARACTERS) {
+            Timber.d( "$TAG: Navigating to character list")
             CharacterListScreen(
                 onCharacterAdded = navController::navigateToSkillList,
                 onCharacterClicked = { character ->
@@ -62,6 +66,7 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
             val characterId = entry.arguments?.getLong(CHARACTER_ID)
                 ?: throw IllegalArgumentException("Must provide character ID for skills list")
 
+            Timber.d( "$TAG: Navigating to skill list")
             SkillListScreen(
                 characterId = characterId,
                 onAddClicked = {
@@ -77,7 +82,11 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
                 onSkillEdit = { skill ->
                     navController.navigate("$SKILL_EDITOR/$characterId?$SKILL_ID=${skill.id}")
                 },
-                navigationIcon = { BackButton(navController) }
+                navigationIcon = {
+                    BackButton(navController) {
+                        navController.navigate(CHARACTERS)
+                    }
+                }
             )
         }
         composable(
@@ -90,6 +99,7 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
         ) { entry ->
             val skillId = entry.arguments?.getLong(SKILL_ID)
                 ?: throw IllegalArgumentException("Missing skill ID")
+            Timber.d("$TAG: Navigating to roll detail")
             RollDetail(
                 skillId,
                 navigationIcon = { BackButton(navController) },
@@ -111,19 +121,23 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
             val characterId = entry.arguments?.getLong(CHARACTER_ID)
                 ?: throw IllegalArgumentException("Must provide character ID to add skill")
             val skillId = entry.arguments?.getString(SKILL_ID)?.toLong()
+            Timber.d( "$TAG: Navigating to skill editor")
             SkillEditor(
                 characterId = characterId,
                 skillId = skillId,
                 navigationIcon = { BackButton(navController) },
-                onSkillSaved = { navController.popBackStack() }
+                onSkillSaved = { navController.navigateToSkillList(characterId) }
             )
         }
     }
 }
 
 @Composable
-fun BackButton(navController: NavHostController) {
-    IconButton(onClick = { navController.popBackStack() }) {
+fun BackButton(
+    navController: NavHostController,
+    onClick: () -> Unit = { navController.popBackStack() }
+) {
+    IconButton(onClick) {
         Icon(Icons.Default.ArrowBack, stringResource(R.string.back))
     }
 }

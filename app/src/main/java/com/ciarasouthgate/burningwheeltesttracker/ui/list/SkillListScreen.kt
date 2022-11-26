@@ -44,7 +44,8 @@ fun SkillListScreen(
             modifier = Modifier.padding(paddingValues),
             grouped = groupedList,
             key = { it.id },
-            labelMap = labelMap
+            labelMap = labelMap,
+            spaceAtBottom = true
         ) {
             SkillListItem(
                 it,

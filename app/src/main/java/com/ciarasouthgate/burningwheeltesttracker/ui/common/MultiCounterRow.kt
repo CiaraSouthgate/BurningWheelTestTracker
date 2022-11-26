@@ -14,7 +14,9 @@ fun <T> MultiCounterRow(
     fields: Array<T>,
     getLabel: (T) -> Int,
     values: SnapshotStateMap<T, Int>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    maxValue: Int = Int.MAX_VALUE,
+    minValue: Int = 0
 ) {
     FormSection(
         titleRes = titleRes,
@@ -27,10 +29,13 @@ fun <T> MultiCounterRow(
                 FormCounter(
                     label = stringResource(getLabel(it)),
                     value = values[it]!!,
-                    onIncrement = { values[it] = values[it]!! + 1 },
+                    onIncrement = {
+                        val value = values[it]!!
+                        if (value < maxValue) values[it] = value + 1
+                    },
                     onDecrement = {
                         val value = values[it]!!
-                        if (value > 0) values[it] = value - 1
+                        if (value > minValue) values[it] = value - 1
                     },
                     modifier = Modifier.weight(1f)
                 )

@@ -1,37 +1,47 @@
 package com.ciarasouthgate.burningwheeltesttracker.viewmodel
 
-import android.database.sqlite.SQLiteConstraintException
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ciarasouthgate.burningwheeltesttracker.data.AppRepository
 import com.ciarasouthgate.burningwheeltesttracker.db.addItem
 import com.ciarasouthgate.burningwheeltesttracker.db.editItem
-import com.ciarasouthgate.burningwheeltesttracker.db.model.Character
 import com.ciarasouthgate.burningwheeltesttracker.db.model.Skill
 import kotlinx.coroutines.launch
 
-interface SkillViewModel {
-    val skill: LiveData<Skill?>
-    val character: LiveData<Character?>
+interface SkillViewModel<T> {
+    val skill: State<Skill?>
+    val state: T
+    val loading: State<Boolean>
+
     suspend fun addSkill(skill: Skill): Long?
     suspend fun editSkill(skill: Skill): Boolean
     suspend fun deleteSkill(skill: Skill)
 }
 
-abstract class BaseSkillViewModel(
+abstract class BaseSkillViewModel<T> (
     private val skillId: Long?,
     private val repository: AppRepository
-) : SkillViewModel, ViewModel() {
-    private val _skill = MutableLiveData<Skill?>(null)
-    override val skill: LiveData<Skill?> = _skill
+) : SkillViewModel<T>, ViewModel() {
+    private val _skill = mutableStateOf<Skill?>(null)
+    override val skill: State<Skill?> = _skill
+
+    private val _loading = mutableStateOf(true)
+    override val loading: State<Boolean> = _loading
 
     init {
         viewModelScope.launch {
-            skillId?.let { _skill.value = repository.getSkill(it) }
+            skillId?.let { id ->
+                _skill.value = repository.getSkill(id).also {
+                    performSkillInitialization(it)
+                }
+            } ?: performSkillInitialization(null)
+            _loading.value = false
         }
     }
+
+    abstract fun performSkillInitialization(skill: Skill?)
 
     override suspend fun addSkill(skill: Skill) = addItem {
         repository.addSkill(skill)
