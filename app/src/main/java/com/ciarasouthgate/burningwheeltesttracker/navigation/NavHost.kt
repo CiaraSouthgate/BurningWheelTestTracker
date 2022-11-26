@@ -14,6 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.ciarasouthgate.burningwheeltesttracker.R
+import com.ciarasouthgate.burningwheeltesttracker.preferences.AppPreferences
 import com.ciarasouthgate.burningwheeltesttracker.ui.list.CharacterListScreen
 import com.ciarasouthgate.burningwheeltesttracker.ui.list.SkillListScreen
 import com.ciarasouthgate.burningwheeltesttracker.ui.roll.RollDetail
@@ -21,9 +22,6 @@ import com.ciarasouthgate.burningwheeltesttracker.ui.skill.SkillEditor
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import timber.log.Timber
-
-private const val TAG = "NavHost"
 
 private const val CHARACTERS = "characters"
 private const val SKILLS = "skills"
@@ -35,11 +33,17 @@ private const val SKILL_ID = "skillId"
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun TrackerNavHost(modifier: Modifier = Modifier) {
+fun TrackerNavHost(
+    appPreferences: AppPreferences,
+    modifier: Modifier = Modifier
+) {
     val navController = rememberAnimatedNavController()
+    val startDestination = appPreferences.activeCharacterId.let {
+        if (it == 0L) CHARACTERS else "$SKILLS/{$CHARACTER_ID}"
+    }
     AnimatedNavHost(
         navController = navController,
-        startDestination = CHARACTERS,
+        startDestination = startDestination,
         modifier = modifier,
         enterTransition = { slideInHorizontally { it } },
         exitTransition = { slideOutHorizontally { -it } },
@@ -47,10 +51,10 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
         popExitTransition = { slideOutHorizontally { it } }
     ) {
         composable(CHARACTERS) {
-            Timber.d( "$TAG: Navigating to character list")
             CharacterListScreen(
                 onCharacterAdded = navController::navigateToSkillList,
                 onCharacterClicked = { character ->
+                    appPreferences.activeCharacterId = character.id
                     navController.navigateToSkillList(character.id)
                 }
             )
@@ -60,13 +64,13 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
             arguments = listOf(
                 navArgument(CHARACTER_ID) {
                     type = NavType.LongType
+                    defaultValue = appPreferences.activeCharacterId
                 }
             )
         ) { entry ->
             val characterId = entry.arguments?.getLong(CHARACTER_ID)
                 ?: throw IllegalArgumentException("Must provide character ID for skills list")
 
-            Timber.d( "$TAG: Navigating to skill list")
             SkillListScreen(
                 characterId = characterId,
                 onAddClicked = {
@@ -84,6 +88,7 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
                 },
                 navigationIcon = {
                     BackButton(navController) {
+                        appPreferences.activeCharacterId = 0
                         navController.navigate(CHARACTERS)
                     }
                 }
@@ -99,7 +104,6 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
         ) { entry ->
             val skillId = entry.arguments?.getLong(SKILL_ID)
                 ?: throw IllegalArgumentException("Missing skill ID")
-            Timber.d("$TAG: Navigating to roll detail")
             RollDetail(
                 skillId,
                 navigationIcon = { BackButton(navController) },
@@ -121,7 +125,6 @@ fun TrackerNavHost(modifier: Modifier = Modifier) {
             val characterId = entry.arguments?.getLong(CHARACTER_ID)
                 ?: throw IllegalArgumentException("Must provide character ID to add skill")
             val skillId = entry.arguments?.getString(SKILL_ID)?.toLong()
-            Timber.d( "$TAG: Navigating to skill editor")
             SkillEditor(
                 characterId = characterId,
                 skillId = skillId,
